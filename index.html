@@ -105,29 +105,7 @@
     </footer>
   </div>
 
-  <script>
-    function calcular() {
-      const area = document.getElementById("area").value;
-      const valor = document.getElementById("valor").value;
-      const resultado = document.getElementById("resultado");
-
-      if (!area || !valor) {
-        alert("Preencha todos os campos.");
-        return;
-      }
-
-      const total = area * valor;
-
-      resultado.innerHTML = 
-        "<strong>Área:</strong> " + area + " m²<br>" +
-        "<strong>Valor por m²:</strong> R$ " + Number(valor).toLocaleString("pt-BR") + "<br><br>" +
-        "<strong>Total estimado:</strong> <span style='font-size:18px;color:#1f7a4d'>R$ " +
-        total.toLocaleString("pt-BR") + "</span>";
-
-      resultado.style.display = "block";
-    }
-  </script>
-<script>
+ <script>
   function calcular() {
     const area = parseFloat(document.getElementById("area").value);
     const valor = parseFloat(document.getElementById("valor").value);
