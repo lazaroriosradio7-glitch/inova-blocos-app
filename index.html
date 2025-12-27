@@ -150,29 +150,30 @@
     `;
   }
 </script>
-<script>
-  function calcularOrcamento() {
-    const area = document.getElementById("area").value;
-    const valor = document.getElementById("valor").value;
+  <script>
+  function calcular() {
+    const area = Number(document.getElementById("area").value);
+    const valor = Number(document.getElementById("valor").value);
     const resultado = document.getElementById("resultado");
 
     if (!area || !valor) {
-      resultado.innerHTML = "Preencha todos os campos.";
+      resultado.innerHTML = "Preencha todos os campos corretamente.";
       resultado.style.color = "red";
       return;
     }
 
     const total = area * valor;
 
-    resultado.innerHTML =
-      "Valor estimado: R$ " +
-      total.toLocaleString("pt-BR", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
+    resultado.innerHTML = `
+      <strong>Área:</strong> ${area} m²<br>
+      <strong>Valor estimado:</strong> R$ ${total.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2
+      })}
+    `;
     resultado.style.color = "#1f7a4d";
   }
 </script>
+
 
 </body>
 </html>
