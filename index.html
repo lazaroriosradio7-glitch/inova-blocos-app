@@ -106,28 +106,28 @@
   </div>
 
 <script>
-  function calcular() {
-    const area = parseFloat(document.getElementById("area").value);
-    const valor = parseFloat(document.getElementById("valor").value);
-    const resultado = document.getElementById("resultado");
+function calcular() {
+  const area = parseFloat(document.getElementById("area").value);
+  const valor = parseFloat(document.getElementById("valor").value);
+  const resultado = document.getElementById("resultado");
 
-    if (!area || !valor) {
-      resultado.innerHTML = "<span style='color:red'>Preencha todos os campos corretamente.</span>";
-      return;
-    }
-
-    const total = area * valor;
-
-    resultado.innerHTML = `
-      <div style="margin-top:15px; font-size:18px;">
-        <strong>Área:</strong> ${area} m²<br>
-        <strong>Valor estimado:</strong><br>
-        <span style="color:#1f7a4d; font-size:22px;">
-          R$ ${total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-        </span>
-      </div>
-    `;
+  if (isNaN(area) || isNaN(valor) || area <= 0 || valor <= 0) {
+    resultado.innerHTML = "<span style='color:red'>Preencha todos os campos corretamente.</span>";
+    return;
   }
+
+  const total = area * valor;
+
+  resultado.innerHTML = `
+    <div style="margin-top:15px; font-size:18px;">
+      <strong>Área:</strong> ${area} m²<br>
+      <strong>Valor estimado:</strong><br>
+      <span style="color:#1f7a4d; font-size:22px;">
+        R$ ${total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+      </span>
+    </div>
+  `;
+}
 </script>
 
   
