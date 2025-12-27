@@ -15,71 +15,67 @@
 
     .container {
       max-width: 420px;
-      margin: 40px auto;
+      margin: 60px auto;
       background: #ffffff;
       padding: 25px;
-      border-radius: 8px;
+      border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
 
     h1 {
       text-align: center;
       color: #1f7a4d;
-      margin-bottom: 10px;
+      margin-bottom: 5px;
     }
 
-    p {
+    p.subtitle {
       text-align: center;
       color: #555;
-      font-size: 14px;
+      margin-bottom: 25px;
     }
 
     label {
+      font-weight: bold;
       display: block;
       margin-top: 15px;
-      font-weight: bold;
-      color: #333;
     }
 
     input {
       width: 100%;
       padding: 10px;
       margin-top: 5px;
-      border-radius: 4px;
       border: 1px solid #ccc;
+      border-radius: 5px;
       font-size: 16px;
     }
 
     button {
       width: 100%;
-      margin-top: 20px;
+      margin-top: 25px;
       padding: 12px;
-      font-size: 16px;
       background: #1f7a4d;
-      color: white;
+      color: #fff;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
+      font-size: 18px;
       cursor: pointer;
     }
 
     button:hover {
-      background: #16603c;
+      background: #16603b;
     }
 
     .resultado {
       margin-top: 20px;
-      padding: 15px;
-      background: #eef7f1;
-      border-left: 5px solid #1f7a4d;
-      font-size: 16px;
-      display: none;
+      font-size: 18px;
+      text-align: center;
     }
 
     footer {
+      margin-top: 25px;
       text-align: center;
-      font-size: 12px;
+      font-size: 13px;
       color: #777;
-      margin-top: 20px;
     }
   </style>
 </head>
@@ -88,48 +84,45 @@
 
   <div class="container">
     <h1>Inova Blocos EPS</h1>
-    <p>Simulador de orçamento de paredes</p>
+    <p class="subtitle">Simulador de orçamento de paredes</p>
 
     <label for="area">Área da parede (m²)</label>
-    <input type="number" id="area" placeholder="Ex: 100">
+    <input type="number" id="area" placeholder="Ex: 90">
 
     <label for="valor">Valor por m² (R$)</label>
-    <input type="number" id="valor" placeholder="Ex: 180">
+    <input type="number" id="valor" placeholder="Ex: 120">
 
     <button onclick="calcular()">Calcular orçamento</button>
 
-    <div class="resultado" id="resultado"></div>
+    <div id="resultado" class="resultado"></div>
 
     <footer>
       © Inova Blocos • Simulação estimada
     </footer>
   </div>
 
-<script>
-function calcular() {
-  const area = parseFloat(document.getElementById("area").value);
-  const valor = parseFloat(document.getElementById("valor").value);
-  const resultado = document.getElementById("resultado");
+  <script>
+    function calcular() {
+      const area = parseFloat(document.getElementById("area").value);
+      const valor = parseFloat(document.getElementById("valor").value);
+      const resultado = document.getElementById("resultado");
 
-  if (isNaN(area) || isNaN(valor) || area <= 0 || valor <= 0) {
-    resultado.innerHTML = "<span style='color:red'>Preencha todos os campos corretamente.</span>";
-    return;
-  }
+      if (isNaN(area) || isNaN(valor) || area <= 0 || valor <= 0) {
+        resultado.innerHTML = "<span style='color:red;'>Preencha todos os campos corretamente.</span>";
+        return;
+      }
 
-  const total = area * valor;
+      const total = area * valor;
 
-  resultado.innerHTML = `
-    <div style="margin-top:15px; font-size:18px;">
-      <strong>Área:</strong> ${area} m²<br>
-      <strong>Valor estimado:</strong><br>
-      <span style="color:#1f7a4d; font-size:22px;">
-        R$ ${total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-      </span>
-    </div>
-  `;
-}
-</script>
+      resultado.innerHTML = `
+        <strong>Área:</strong> ${area} m²<br>
+        <strong>Valor estimado:</strong><br>
+        <span style="color:#1f7a4d; font-size:22px;">
+          R$ ${total.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+        </span>
+      `;
+    }
+  </script>
 
-  
 </body>
 </html>
