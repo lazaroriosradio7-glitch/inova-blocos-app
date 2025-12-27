@@ -150,6 +150,29 @@
     `;
   }
 </script>
+<script>
+  function calcularOrcamento() {
+    const area = document.getElementById("area").value;
+    const valor = document.getElementById("valor").value;
+    const resultado = document.getElementById("resultado");
+
+    if (!area || !valor) {
+      resultado.innerHTML = "Preencha todos os campos.";
+      resultado.style.color = "red";
+      return;
+    }
+
+    const total = area * valor;
+
+    resultado.innerHTML =
+      "Valor estimado: R$ " +
+      total.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    resultado.style.color = "#1f7a4d";
+  }
+</script>
 
 </body>
 </html>
