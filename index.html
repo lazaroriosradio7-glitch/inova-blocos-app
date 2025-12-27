@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Inova Blocos | Paredes Rápidas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 480px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #ff6a00;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      font-size: 16px;
+    }
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+      background: #ff6a00;
+      color: #fff;
+      font-size: 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .resultado {
+      margin-top: 20px;
+      font-size: 18px;
+      text-align: center;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>Inova Blocos</h1>
+
+    <label>Área da parede (m²)</label>
+    <input type="number" id="area" placeholder="Ex: 100">
+
+    <label>Valor por m² (R$)</label>
+    <input type="number" id="valor" placeholder="Ex: 180">
+
+    <button onclick="calcular()">Calcular orçamento</button>
+
+    <div class="resultado" id="resultado"></div>
+  </div>
+
+  <script>
+    function calcular() {
+      const area = document.getElementById('area').value;
+      const valor = document.getElementById('valor').value;
+
+      if (!area || !valor) {
+        alert("Preencha todos os campos");
+        return;
+      }
+
+      const total = area * valor;
+      document.getElementById('resultado').innerText =
+        "Valor estimado: R$ " + total.toLocaleString('pt-BR');
+    }
+  </script>
+</body>
+</html>
