@@ -1,262 +1,192 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Renova Blocos | Paredes Rápidas EPS</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Renova Blocos | Paredes Rápidas EPS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f1f5f9;
-      margin: 0;
-    }
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    header {
-      background: #0f172a;
-      color: #fff;
-      padding: 20px;
-      text-align: center;
-      border-bottom: 5px solid #ea580c;
-    }
-
-    header h1 {
-      margin: 0;
-      font-size: 26px;
-      font-weight: bold;
-    }
-
-    header p {
-      margin: 6px 0 0;
-      font-size: 13px;
-      color: #cbd5e1;
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: 30px auto;
-      padding: 20px;
-      display: grid;
-      grid-template-columns: 380px 1fr;
-      gap: 20px;
-    }
-
-    .panel {
-      background: #fff;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,.08);
-    }
-
-    .panel h3 {
-      margin-top: 0;
-      font-size: 14px;
-      text-transform: uppercase;
-      color: #475569;
-    }
-
-    label {
-      font-size: 13px;
-      font-weight: bold;
-      margin-top: 12px;
-      display: block;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 6px;
-      border: 1px solid #cbd5e1;
-      font-size: 14px;
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .btn {
-      flex: 1;
-      padding: 10px;
-      border: none;
-      border-radius: 6px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .btn.orange {
-      background: #ea580c;
-      color: #fff;
-    }
-
-    .btn.gray {
-      background: #e2e8f0;
-    }
-
-    .canvas {
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,.08);
-      padding: 20px;
-      min-height: 420px;
-      position: relative;
-    }
-
-    .room {
-      position: absolute;
-      background: rgba(234,88,12,.15);
-      border: 2px solid #ea580c;
-      cursor: move;
-      text-align: center;
-      font-size: 11px;
-      font-weight: bold;
-      color: #7c2d12;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    footer {
-      background: #0f172a;
-      color: #fff;
-      padding: 20px;
-      margin-top: 30px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-    }
-
-    footer strong {
-      color: #fb923c;
-    }
-
-    footer button {
-      background: #ea580c;
-      border: none;
-      padding: 14px 26px;
-      font-size: 16px;
-      font-weight: bold;
-      color: #fff;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-
-    @media (max-width: 900px) {
-      .container {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+<style>
+body { background:#f4f6f8 }
+.canvas {
+  background-image: radial-gradient(#cbd5e1 1px, transparent 1px);
+  background-size: 20px 20px;
+  position: relative;
+  overflow: hidden;
+}
+.comodo {
+  position:absolute;
+  background:#fff7ed;
+  border:2px solid #f97316;
+  cursor:move;
+}
+.controls {
+  position:absolute;
+  top:-34px;
+  left:0;
+  display:flex;
+  gap:6px;
+}
+.ctrl {
+  background:#1e293b;
+  color:#fff;
+  padding:4px 8px;
+  font-size:10px;
+  border-radius:6px;
+}
+</style>
 </head>
 
 <body>
 
-<header>
-  <h1>RENOVA BLOCOS</h1>
-  <p>Paredes Rápidas EPS • Sistema construtivo inteligente</p>
+<header class="bg-slate-900 text-white p-5 border-b-4 border-orange-600">
+  <h1 class="text-2xl font-black uppercase">RENOVA <span class="text-orange-500">BLOCOS</span></h1>
+  <p class="text-xs text-slate-400">Paredes rápidas EPS • construa melhor, mais rápido e mais barato</p>
 </header>
 
-<div class="container">
+<main class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-  <!-- CONTROLES -->
-  <div class="panel">
-    <h3>Configuração do Projeto</h3>
+<!-- CONFIGURAÇÃO -->
+<section class="lg:col-span-4 bg-white p-6 rounded-2xl shadow space-y-4">
 
-    <label>Altura das paredes (m)</label>
-    <input type="number" id="altura" value="2.80" step="0.1">
+<h2 class="font-black uppercase text-slate-700">Configuração do Projeto</h2>
 
-    <label>Espessura EPS</label>
-    <select id="eps">
-      <option value="13">EPS 13 cm</option>
-      <option value="15" selected>EPS 15 cm</option>
-      <option value="20">EPS 20 cm</option>
-    </select>
+<label class="text-xs font-bold">Altura das paredes (m)</label>
+<input id="altura" type="number" value="2.8" class="w-full p-2 border rounded">
 
-    <label>Criar cômodo</label>
-    <input type="text" id="tipo" placeholder="Ex: Quarto">
+<label class="text-xs font-bold">Espessura EPS</label>
+<select id="eps" class="w-full p-2 border rounded">
+  <option value="15">EPS 15 cm</option>
+  <option value="20">EPS 20 cm</option>
+</select>
 
-    <label>Largura (m)</label>
-    <input type="number" id="largura">
+<hr>
 
-    <label>Comprimento (m)</label>
-    <input type="number" id="comprimento">
+<label class="text-xs font-bold">Tipo de cômodo</label>
+<select id="tipo" class="w-full p-2 border rounded">
+  <option>Quarto</option>
+  <option>Sala</option>
+  <option>Cozinha</option>
+  <option>Banheiro</option>
+  <option>Garagem</option>
+</select>
 
-    <div class="btn-group">
-      <button class="btn gray" onclick="addRoom()">Adicionar</button>
-    </div>
-  </div>
-
-  <!-- PLANTA -->
-  <div class="canvas" id="canvas"></div>
-
+<div class="grid grid-cols-2 gap-2">
+<input id="larg" placeholder="Largura (m)" type="number" class="p-2 border rounded">
+<input id="comp" placeholder="Comprimento (m)" type="number" class="p-2 border rounded">
 </div>
 
-<footer>
-  <div>
-    Área construída<br>
-    <strong id="area">0.00 m²</strong>
-  </div>
+<div class="flex gap-1">
+<button onclick="add('subsolo')" class="flex-1 bg-slate-400 text-white p-2 rounded text-xs">Subsolo</button>
+<button onclick="add('terreo')" class="flex-1 bg-slate-800 text-white p-2 rounded text-xs">Térreo</button>
+<button onclick="add('superior')" class="flex-1 bg-slate-600 text-white p-2 rounded text-xs">Superior</button>
+</div>
 
-  <div>
-    Consumo estimado<br>
-    <strong id="placas">0 placas EPS</strong>
-  </div>
+<hr>
 
-  <button>Avançar para o comparativo</button>
-</footer>
+<div class="bg-orange-50 p-4 rounded">
+<p class="text-xs uppercase font-bold text-orange-600">Resultado</p>
+<p id="area" class="font-black">Área: 0 m²</p>
+<p id="paredes" class="font-black">Paredes EPS: 0 m²</p>
+</div>
+
+<button class="w-full bg-orange-600 text-white p-4 rounded-xl font-black uppercase">
+Ver economia com Renova Blocos
+</button>
+
+</section>
+
+<!-- PLANTA -->
+<section class="lg:col-span-8 bg-white rounded-3xl shadow overflow-hidden flex flex-col">
+
+<div class="flex bg-slate-100 border-b">
+<button onclick="nivel='subsolo';render()" class="px-6 py-3 font-black text-xs">Subsolo</button>
+<button onclick="nivel='terreo';render()" class="px-6 py-3 font-black text-xs">Térreo</button>
+<button onclick="nivel='superior';render()" class="px-6 py-3 font-black text-xs">Superior</button>
+</div>
+
+<div id="canvas" class="canvas flex-1"></div>
+
+</section>
+
+</main>
 
 <script>
-  let rooms = [];
+let nivel='terreo';
+let escala=20;
+let comodos=[];
 
-  function addRoom() {
-    const tipo = document.getElementById("tipo").value || "Cômodo";
-    const w = parseFloat(document.getElementById("largura").value);
-    const h = parseFloat(document.getElementById("comprimento").value);
-    const canvas = document.getElementById("canvas");
+function add(n){
+  const l=parseFloat(larg.value);
+  const c=parseFloat(comp.value);
+  if(!l||!c) return alert('Informe medidas');
+  comodos.push({
+    id:Date.now(),
+    tipo:tipo.value,
+    l,c,n,
+    x:100,y:100,rot:0
+  });
+  render();
+}
 
-    if (!w || !h) return alert("Informe as medidas");
+function render(){
+  canvas.innerHTML='';
+  let area=0, per=0;
+  comodos.filter(o=>o.n===nivel).forEach(o=>{
+    area+=o.l*o.c;
+    per+=2*(o.l+o.c);
 
-    const div = document.createElement("div");
-    div.className = "room";
-    div.style.width = (w * 30) + "px";
-    div.style.height = (h * 30) + "px";
-    div.style.left = "20px";
-    div.style.top = "20px";
-    div.innerText = tipo;
+    const d=document.createElement('div');
+    d.className='comodo';
+    d.style.width=o.l*escala+'px';
+    d.style.height=o.c*escala+'px';
+    d.style.left=o.x+'px';
+    d.style.top=o.y+'px';
+    d.style.transform=`rotate(${o.rot}deg)`;
 
-    canvas.appendChild(div);
+    d.innerHTML=`
+      <div class="controls">
+        <button class="ctrl" onclick="girar(${o.id})"><i class="fa fa-rotate"></i></button>
+        <button class="ctrl bg-red-600" onclick="del(${o.id})"><i class="fa fa-trash"></i></button>
+      </div>
+      <div class="flex items-center justify-center h-full text-xs font-black">${o.tipo}</div>
+    `;
 
-    rooms.push({ w, h });
+    drag(d,o);
+    canvas.appendChild(d);
+  });
 
-    atualizar();
-    drag(div);
+  areaSpan=area.toFixed(2);
+  area.innerText=`Área: ${areaSpan} m²`;
+  paredes.innerText=`Paredes EPS: ${(per*altura.value).toFixed(2)} m²`;
+}
+
+function girar(id){
+  let o=comodos.find(x=>x.id===id);
+  o.rot=(o.rot+90)%360;
+  render();
+}
+
+function del(id){
+  comodos=comodos.filter(x=>x.id!==id);
+  render();
+}
+
+function drag(el,o){
+  let dx,dy;
+  el.onmousedown=e=>{
+    dx=e.clientX-o.x;
+    dy=e.clientY-o.y;
+    document.onmousemove=e=>{
+      o.x=e.clientX-dx;
+      o.y=e.clientY-dy;
+      render();
+    }
+    document.onmouseup=()=>document.onmousemove=null;
   }
-
-  function atualizar() {
-    let area = 0;
-    rooms.forEach(r => area += r.w * r.h);
-
-    const altura = parseFloat(document.getElementById("altura").value);
-    const placas = Math.ceil(area * altura);
-
-    document.getElementById("area").innerText = area.toFixed(2) + " m²";
-    document.getElementById("placas").innerText = placas + " placas EPS";
-  }
-
-  function drag(el) {
-    let x = 0, y = 0;
-    el.onmousedown = e => {
-      x = e.clientX - el.offsetLeft;
-      y = e.clientY - el.offsetTop;
-      document.onmousemove = m => {
-        el.style.left = (m.clientX - x) + "px";
-        el.style.top = (m.clientY - y) + "px";
-      };
-      document.onmouseup = () => document.onmousemove = null;
-    };
-  }
+}
 </script>
 
 </body>
