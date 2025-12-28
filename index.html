@@ -2,130 +2,120 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Renova Blocos | Configurador Inteligente</title>
+<title>RENOVA BLOCOS | PAREDES RÁPIDAS T & A</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root{
-  --azul:#0f172a;
-  --laranja:#ea580c;
-  --cinza:#f1f5f9;
-}
 body{
   margin:0;
   font-family:Arial, Helvetica, sans-serif;
-  background:var(--cinza);
+  background:#f4f6f8;
+  color:#1e293b;
 }
 header{
-  background:var(--azul);
+  background:#0f172a;
   color:#fff;
-  padding:18px 30px;
-  border-bottom:5px solid var(--laranja);
+  padding:16px 24px;
+  border-bottom:5px solid #ea580c;
 }
-header h1{margin:0;font-size:26px;}
-header small{color:#cbd5e1;}
-
+header h1{
+  margin:0;
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:-0.5px;
+}
+header small{
+  color:#94a3b8;
+  font-weight:bold;
+}
 main{
-  display:grid;
-  grid-template-columns:380px 1fr;
-  gap:20px;
+  max-width:1400px;
+  margin:auto;
   padding:20px;
+  display:grid;
+  grid-template-columns:360px 1fr;
+  gap:20px;
 }
-
-.card{
+section{
   background:#fff;
-  border-radius:14px;
-  padding:18px;
-  margin-bottom:16px;
-  box-shadow:0 4px 14px rgba(0,0,0,.08);
+  border-radius:12px;
+  padding:16px;
+  margin-bottom:14px;
+  box-shadow:0 4px 10px rgba(0,0,0,.05);
 }
-
-h3{
-  margin-top:0;
-  font-size:14px;
+section h3{
+  margin:0 0 10px 0;
+  font-size:11px;
   text-transform:uppercase;
   color:#64748b;
 }
-
-label{font-size:13px;font-weight:bold;}
-input,select{
-  width:100%;
-  padding:10px;
-  margin-top:6px;
-  margin-bottom:12px;
-  border-radius:8px;
-  border:1px solid #cbd5e1;
-}
-
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-
-.btn{
-  padding:12px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
+label{
+  font-size:12px;
   font-weight:bold;
 }
-.btn-dark{background:var(--azul);color:#fff;}
-.btn-orange{background:var(--laranja);color:#fff;}
-.btn-group button{flex:1;}
-
-#canvas{
-  position:relative;
-  background:
-    radial-gradient(#cbd5e1 1px, transparent 1px);
-  background-size:20px 20px;
+input, select{
+  width:100%;
+  padding:8px;
+  margin-top:4px;
+  margin-bottom:8px;
+  border-radius:6px;
+  border:1px solid #cbd5e1;
+}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.grid4{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+button{
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:#ea580c;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+}
+button.alt{background:#334155;}
+button.sel{background:#16a34a;}
+.canvas{
+  background:#f8fafc;
+  border:2px dashed #cbd5e1;
   border-radius:18px;
-  height:calc(100vh - 210px);
+  position:relative;
   overflow:hidden;
 }
-
+#lote{
+  position:absolute;
+  border:3px solid #475569;
+  background:rgba(148,163,184,.08);
+}
 .comodo{
   position:absolute;
-  background:#ffedd5;
-  border:2px solid var(--laranja);
-  cursor:move;
+  background:rgba(255,237,213,.95);
+  border:2px solid #ea580c;
+  font-size:10px;
+  font-weight:bold;
+  text-align:center;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:11px;
-  font-weight:bold;
+  cursor:move;
 }
-.ctrl{
-  position:absolute;
-  top:-28px;
-  left:0;
-  display:flex;
-  gap:4px;
-}
-.ctrl button{
-  font-size:10px;
-  padding:4px 6px;
-  border:none;
-  border-radius:5px;
-  cursor:pointer;
-}
-
 footer{
-  position:absolute;
-  bottom:0;
-  left:0;
-  right:0;
-  background:var(--azul);
+  background:#0f172a;
   color:#fff;
-  padding:18px;
+  padding:14px 24px;
   display:flex;
   justify-content:space-between;
   align-items:center;
+  border-top:5px solid #ea580c;
 }
+footer strong{font-size:18px;}
 </style>
 </head>
 
 <body>
 
 <header>
-  <h1>RENOVA BLOCOS</h1>
-  <small>Paredes Rápidas EPS • Sistema construtivo inteligente</small>
+  <h1>RENOVA BLOCOS | PAREDES RÁPIDAS T & A</h1>
+  <small>CUB / SINAPI dinâmicos • Simulador técnico</small>
 </header>
 
 <main>
@@ -133,145 +123,106 @@ footer{
 <!-- PAINEL ESQUERDO -->
 <div>
 
-<div class="card">
-<h3>1. Localização</h3>
-<select id="estado">
-<option value="">Escolha o Estado</option>
-<option data-cub="2150" data-sinapi="1450">Bahia</option>
-<option data-cub="2480" data-sinapi="1620">São Paulo</option>
-<option data-cub="2300" data-sinapi="1500">Santa Catarina</option>
+<section>
+<h3>Localização</h3>
+<select id="estado" onchange="atualizarIndices()">
+<option value="">Estado</option>
+<option value="BA">Bahia</option>
+<option value="SP">São Paulo</option>
+<option value="SC">Santa Catarina</option>
 </select>
 <input id="cidade" placeholder="Cidade">
-<p style="font-size:12px;color:#475569;">
-CUB: <strong id="cub">R$ 0</strong> • SINAPI/IBGE: <strong id="sinapi">R$ 0</strong>
-</p>
+<div><strong>CUB:</strong> <span id="cub">R$ 0,00</span></div>
+<div><strong>SINAPI:</strong> <span id="sinapi">R$ 0,00</span></div>
+</section>
+
+<section>
+<h3>Padrão construtivo</h3>
+<button onclick="setPadrao(0.9)" class="alt">Popular</button>
+<button onclick="setPadrao(1)" class="sel">Médio</button>
+<button onclick="setPadrao(1.25)" class="alt">Alto</button>
+</section>
+
+<section>
+<h3>Tipo de obra</h3>
+<button onclick="setTipo(1)" class="sel">Residencial</button>
+<button onclick="setTipo(1.15)" class="alt">Comercial</button>
+</section>
+
+<section>
+<h3>Terreno (m)</h3>
+<div class="grid2">
+<input id="tf" placeholder="Frente">
+<input id="tb" placeholder="Fundo">
+<input id="te" placeholder="Esq">
+<input id="td" placeholder="Dir">
 </div>
+<button onclick="desenharLote()">Desenhar terreno</button>
+</section>
 
-<div class="card">
-<h3>2. Medidas do Terreno (m)</h3>
-<div class="grid-2">
-<input placeholder="Frente" id="tf">
-<input placeholder="Fundo" id="tb">
-<input placeholder="Lateral Esq." id="te">
-<input placeholder="Lateral Dir." id="td">
-</div>
-</div>
-
-<div class="card">
-<h3>3. Configuração</h3>
-<label>Altura das paredes (m)</label>
-<input id="altura" value="2.80">
-
-<label>Espessura EPS</label>
-<select id="eps">
-<option value="13">13 cm</option>
-<option value="15" selected>15 cm</option>
-<option value="20">20 cm</option>
-</select>
-
-<label>Tipo de construção</label>
-<select id="tipo">
-<option value="1">Residencial</option>
-<option value="1.15">Comercial</option>
-</select>
-
-<label>Padrão construtivo</label>
-<select id="padrao">
-<option value="1">Popular</option>
-<option value="1.25" selected>Médio</option>
-<option value="1.5">Alto padrão</option>
-</select>
-</div>
-
-<div class="card">
-<h3>4. Criar Cômodo</h3>
-<select id="nomeComodo">
-<option>Sala</option>
-<option>Quarto</option>
-<option>Cozinha</option>
-<option>Banheiro</option>
-<option>Garagem</option>
-</select>
-<div class="grid-2">
+<section>
+<h3>Cômodo</h3>
+<input id="ctipo" placeholder="Tipo do cômodo">
+<div class="grid2">
 <input id="cf" placeholder="Frente">
 <input id="cb" placeholder="Fundo">
 <input id="ce" placeholder="Esq">
 <input id="cd" placeholder="Dir">
 </div>
-<div class="btn-group" style="display:flex;gap:6px;">
-<button class="btn btn-dark" onclick="addComodo('Subsolo')">Subsolo</button>
-<button class="btn btn-dark" onclick="addComodo('Térreo')">Térreo</button>
-<button class="btn btn-dark" onclick="addComodo('Superior')">Superior</button>
-</div>
-</div>
+<button onclick="addComodo()">Adicionar cômodo</button>
+</section>
 
 </div>
 
-<!-- CANVAS -->
-<div style="position:relative;">
-<div id="canvas"></div>
-
-<footer>
-<div>
-Área construída: <strong id="area">0 m²</strong><br>
-Paredes EPS: <strong id="paredes">0 m²</strong>
-</div>
-<button class="btn btn-orange">VER ECONOMIA COM RENOVA BLOCOS</button>
-</footer>
-</div>
+<!-- PLANTA -->
+<div class="canvas" id="canvas"></div>
 
 </main>
 
+<footer>
+<div>Área construída: <strong id="area">0 m²</strong></div>
+<div>RENOVA BLOCOS</div>
+</footer>
+
 <script>
-const canvas=document.getElementById('canvas');
-let comodos=[];
+const estados={
+BA:{cub:2150,sinapi:1950},
+SP:{cub:2480,sinapi:2250},
+SC:{cub:2300,sinapi:2100}
+};
+let padrao=1,tipo=1,escala=15,areaTotal=0;
 
-document.getElementById('estado').onchange=e=>{
-  const o=e.target.selectedOptions[0];
-  document.getElementById('cub').innerText="R$ "+(o.dataset.cub||0);
-  document.getElementById('sinapi').innerText="R$ "+(o.dataset.sinapi||0);
+function atualizarIndices(){
+const uf=document.getElementById("estado").value;
+if(!uf)return;
+document.getElementById("cub").innerText=(estados[uf].cub*padrao*tipo).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+document.getElementById("sinapi").innerText=(estados[uf].sinapi*padrao*tipo).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 }
 
-function addComodo(nivel){
-  const f=+cf.value||0,b=+cb.value||f,e=+ce.value||0,d=+cd.value||e;
-  if(!f||!e)return alert("Informe medidas");
-  const div=document.createElement('div');
-  div.className='comodo';
-  div.style.width=(f*15)+'px';
-  div.style.height=(e*15)+'px';
-  div.style.left='40px';
-  div.style.top='40px';
-  div.innerHTML=`${nomeComodo.value}<div class="ctrl">
-  <button onclick="this.parentElement.parentElement.remove()">🗑</button>
-  <button onclick="this.parentElement.parentElement.style.transform='rotate(90deg)'">⟳</button>
-  </div>`;
-  drag(div);
-  canvas.appendChild(div);
-  comodos.push({f,b,e,d});
-  calc();
+function setPadrao(v){padrao=v;atualizarIndices();}
+function setTipo(v){tipo=v;atualizarIndices();}
+
+function desenharLote(){
+const f=+tf.value,b=+tb.value,e=+te.value,d=+td.value;
+const lote=document.createElement("div");
+lote.id="lote";
+lote.style.width=(Math.max(f,b)*escala)+"px";
+lote.style.height=(Math.max(e,d)*escala)+"px";
+lote.style.left="40px";lote.style.top="40px";
+canvas.innerHTML="";canvas.appendChild(lote);
 }
 
-function drag(el){
-  let x=0,y=0;
-  el.onmousedown=e=>{
-    x=e.clientX;y=e.clientY;
-    document.onmousemove=ev=>{
-      el.style.left=(el.offsetLeft+(ev.clientX-x))+'px';
-      el.style.top=(el.offsetTop+(ev.clientY-y))+'px';
-      x=ev.clientX;y=ev.clientY;
-    };
-    document.onmouseup=()=>document.onmousemove=null;
-  }
-}
-
-function calc(){
-  let area=0,per=0;
-  comodos.forEach(c=>{
-    area+=((c.f+c.b)/2)*((c.e+c.d)/2);
-    per+=c.f+c.b+c.e+c.d;
-  });
-  document.getElementById('area').innerText=area.toFixed(2)+" m²";
-  document.getElementById('paredes').innerText=(per*altura.value).toFixed(2)+" m²";
+function addComodo(){
+const c=document.createElement("div");
+const f=+cf.value||1,b=+cb.value||f,e=+ce.value||1,d=+cd.value||e;
+c.className="comodo";
+c.style.width=(Math.max(f,b)*escala)+"px";
+c.style.height=(Math.max(e,d)*escala)+"px";
+c.style.left="60px";c.style.top="60px";
+c.innerText=ctipo.value||"Cômodo";
+canvas.appendChild(c);
+areaTotal+=((f+b)/2)*((e+d)/2);
+area.innerText=areaTotal.toFixed(2)+" m²";
 }
 </script>
 
