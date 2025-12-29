@@ -9,7 +9,7 @@
 :root{
   --laranja:#ea580c;
   --escuro:#0f172a;
-  --cinza:#475569;
+  --cinza:#334155;
 }
 *{box-sizing:border-box}
 body{
@@ -51,7 +51,6 @@ main{
   text-transform:uppercase;
   color:#64748b;
 }
-label{font-size:12px;font-weight:bold}
 input,select{
   width:100%;
   padding:7px;
@@ -79,24 +78,31 @@ button{
   box-shadow:0 4px 12px rgba(0,0,0,.06);
 }
 .canvas{
-  background:#f8fafc;
-  border:2px dashed #cbd5e1;
+  background:
+    linear-gradient(#e2e8f0 1px, transparent 1px),
+    linear-gradient(90deg,#e2e8f0 1px, transparent 1px);
+  background-size:20px 20px;
+  border:2px solid #cbd5e1;
   border-radius:14px;
-  height:440px;
+  height:480px;
   position:relative;
   overflow:hidden;
 }
 
+/* TERRENO */
 #lote{
   position:absolute;
-  background:rgba(148,163,184,.15);
-  border:3px solid var(--cinza);
+  background:rgba(148,163,184,.12);
+  outline:3px solid var(--cinza); /* mantém linha sempre visível */
+  outline-offset:-3px;
 }
 
+/* CÔMODO */
 .comodo{
   position:absolute;
   background:rgba(255,237,213,.97);
-  border:2px solid var(--laranja);
+  outline:2px solid var(--laranja); /* evita sumir com clip-path */
+  outline-offset:-2px;
   font-size:10px;
   font-weight:bold;
   display:flex;
@@ -106,10 +112,11 @@ button{
 }
 .controls{
   position:absolute;
-  top:-26px;
+  top:-28px;
   left:0;
   display:flex;
   gap:4px;
+  z-index:5;
 }
 .controls button{
   padding:2px 6px;
@@ -131,6 +138,13 @@ footer{
   flex-wrap:wrap;
 }
 footer span{font-weight:bold}
+footer .cta{
+  background:var(--laranja);
+  padding:10px 18px;
+  border-radius:10px;
+  font-weight:900;
+  cursor:pointer;
+}
 </style>
 </head>
 
@@ -207,7 +221,10 @@ footer span{font-weight:bold}
 <footer>
   <div>Área do terreno: <span id="areaTerreno">0 m²</span></div>
   <div>Área construída: <span id="areaConstruida">0 m²</span></div>
-  <div>Paredes prontas (1×1): <span id="blocos">0</span></div>
+  <div>Paredes prontas: <span id="blocos">0</span></div>
+  <div class="cta" onclick="alert('Próxima página: comparativos Renova Blocos')">
+    Ver por que a Renova Blocos é melhor →
+  </div>
 </footer>
 
 <script>
@@ -218,11 +235,10 @@ SC:{cub:2300,sinapi:2100}
 };
 
 let padrao=1, tipo=1;
-let escala=12;
+let escala=14;
 let loteData=null;
 let areaConstruida=0;
 let alturaParede=2.8;
-let comodos=[];
 
 function atualizarIndices(){
   const uf=estado.value;
@@ -242,8 +258,8 @@ function desenharLote(){
   lote.id="lote";
   lote.style.width=(maxW*escala)+"px";
   lote.style.height=(maxH*escala)+"px";
-  lote.style.left="40px";
-  lote.style.top="40px";
+  lote.style.left=(canvas.clientWidth/2 - (maxW*escala)/2)+"px";
+  lote.style.top=(canvas.clientHeight/2 - (maxH*escala)/2)+"px";
   lote.style.clipPath=`polygon(
     0% 0%,
     ${(f/maxW)*100}% 0%,
@@ -263,8 +279,8 @@ function addComodo(){
   c.className="comodo";
   c.style.width=(maxW*escala)+"px";
   c.style.height=(maxH*escala)+"px";
-  c.style.left="60px";
-  c.style.top="60px";
+  c.style.left=(canvas.clientWidth/2 - (maxW*escala)/2)+"px";
+  c.style.top=(canvas.clientHeight/2 - (maxH*escala)/2)+"px";
   c.style.clipPath=`polygon(
     0% 0%,
     ${(f/maxW)*100}% 0%,
@@ -287,9 +303,7 @@ function addComodo(){
 }
 
 function areaConstruidaElem(){
-  areaConstruidaElem;
-  areaConstruidaElem = document.getElementById("areaConstruida");
-  areaConstruidaElem.innerText=areaConstruida.toFixed(2)+" m²";
+  document.getElementById("areaConstruida").innerText=areaConstruida.toFixed(2)+" m²";
 }
 
 function atualizarBlocos(){
@@ -321,7 +335,7 @@ function ativarDrag(el){
     document.onmousemove=ev=>{
       let x=ev.pageX-canvas.offsetLeft-ox;
       let y=ev.pageY-canvas.offsetTop-oy;
-      const snap=10;
+      const snap=12;
       document.querySelectorAll(".comodo").forEach(o=>{
         if(o!==el){
           if(Math.abs(o.offsetLeft-(x+el.offsetWidth))<snap) x=o.offsetLeft-el.offsetWidth;
