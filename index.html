@@ -9,7 +9,9 @@
 :root{
   --laranja:#ea580c;
   --escuro:#0f172a;
+  --cinza:#475569;
 }
+*{box-sizing:border-box}
 body{
   margin:0;
   font-family:Arial, Helvetica, sans-serif;
@@ -21,15 +23,9 @@ header{
   padding:14px 20px;
   border-bottom:4px solid var(--laranja);
 }
-header h1{
-  margin:0;
-  font-size:22px;
-  font-weight:900;
-}
-header span{
-  font-size:11px;
-  color:#cbd5e1;
-}
+header h1{margin:0;font-size:22px;font-weight:900}
+header span{font-size:11px;color:#cbd5e1}
+
 main{
   max-width:1400px;
   margin:auto;
@@ -39,34 +35,32 @@ main{
   gap:16px;
 }
 @media(max-width:900px){
-  main{grid-template-columns:1fr;}
+  main{grid-template-columns:1fr}
 }
+
 .card{
   background:#fff;
   border-radius:12px;
   padding:14px;
   margin-bottom:12px;
-  box-shadow:0 4px 12px rgba(0,0,0,.05);
+  box-shadow:0 4px 12px rgba(0,0,0,.06);
 }
 .card h3{
+  margin:0 0 8px;
   font-size:11px;
   text-transform:uppercase;
   color:#64748b;
-  margin:0 0 8px;
 }
-label{
-  font-size:12px;
-  font-weight:bold;
-}
+label{font-size:12px;font-weight:bold}
 input,select{
   width:100%;
   padding:7px;
-  margin-top:4px;
-  margin-bottom:6px;
+  margin:4px 0 6px;
   border-radius:6px;
   border:1px solid #cbd5e1;
 }
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+
 button{
   padding:9px;
   border:none;
@@ -74,9 +68,10 @@ button{
   font-weight:bold;
   cursor:pointer;
 }
-.btn{background:var(--laranja);color:#fff;}
-.btn-alt{background:#334155;color:#fff;}
-.btn-sel{background:#16a34a;color:#fff;}
+.btn{background:var(--laranja);color:#fff}
+.btn-alt{background:#334155;color:#fff}
+.btn-sel{background:#16a34a;color:#fff}
+
 .canvas-wrap{
   background:#fff;
   border-radius:18px;
@@ -87,25 +82,43 @@ button{
   background:#f8fafc;
   border:2px dashed #cbd5e1;
   border-radius:14px;
-  height:420px;
+  height:440px;
   position:relative;
   overflow:hidden;
 }
+
 #lote{
   position:absolute;
-  border:3px solid #475569;
-  background:rgba(148,163,184,.12);
+  background:rgba(148,163,184,.15);
+  border:3px solid var(--cinza);
 }
+
 .comodo{
   position:absolute;
-  background:rgba(255,237,213,.95);
+  background:rgba(255,237,213,.97);
   border:2px solid var(--laranja);
   font-size:10px;
   font-weight:bold;
   display:flex;
   align-items:center;
   justify-content:center;
+  cursor:move;
 }
+.controls{
+  position:absolute;
+  top:-26px;
+  left:0;
+  display:flex;
+  gap:4px;
+}
+.controls button{
+  padding:2px 6px;
+  font-size:10px;
+  border-radius:4px;
+  background:#0f172a;
+  color:#fff;
+}
+
 footer{
   background:var(--escuro);
   color:#fff;
@@ -114,7 +127,10 @@ footer{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
 }
+footer span{font-weight:bold}
 </style>
 </head>
 
@@ -127,6 +143,7 @@ footer{
 
 <main>
 
+<!-- PAINEL -->
 <div>
 
 <div class="card">
@@ -180,15 +197,17 @@ footer{
 
 </div>
 
+<!-- PLANTA -->
 <div class="canvas-wrap">
-<div class="canvas" id="canvas"></div>
+  <div class="canvas" id="canvas"></div>
 </div>
 
 </main>
 
 <footer>
-<div>Área construída: <b id="area">0 m²</b></div>
-<div>RENOVA BLOCOS</div>
+  <div>Área do terreno: <span id="areaTerreno">0 m²</span></div>
+  <div>Área construída: <span id="areaConstruida">0 m²</span></div>
+  <div>Paredes prontas (1×1): <span id="blocos">0</span></div>
 </footer>
 
 <script>
@@ -197,47 +216,125 @@ BA:{cub:2150,sinapi:1950},
 SP:{cub:2480,sinapi:2250},
 SC:{cub:2300,sinapi:2100}
 };
-let padrao=1,tipo=1,escala=12,areaTotal=0;
+
+let padrao=1, tipo=1;
+let escala=12;
 let loteData=null;
+let areaConstruida=0;
+let alturaParede=2.8;
+let comodos=[];
 
 function atualizarIndices(){
-const uf=estado.value;
-if(!uf)return;
-cub.innerText=(estados[uf].cub*padrao*tipo).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-sinapi.innerText=(estados[uf].sinapi*padrao*tipo).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+  const uf=estado.value;
+  if(!uf)return;
+  cub.innerText=(estados[uf].cub*padrao*tipo).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+  sinapi.innerText=(estados[uf].sinapi*padrao*tipo).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 }
-
-function setPadrao(v){padrao=v;atualizarIndices();}
-function setTipo(v){tipo=v;atualizarIndices();}
+function setPadrao(v){padrao=v;atualizarIndices()}
+function setTipo(v){tipo=v;atualizarIndices()}
 
 function desenharLote(){
-canvas.innerHTML="";
-const f=+tf.value||10,b=+tb.value||f,e=+te.value||10,d=+td.value||e;
-loteData={f,b,e,d};
-const maxW=Math.max(f,b),maxH=Math.max(e,d);
-const lote=document.createElement("div");
-lote.id="lote";
-lote.style.width=(maxW*escala)+"px";
-lote.style.height=(maxH*escala)+"px";
-lote.style.left="40px";
-lote.style.top="40px";
-canvas.appendChild(lote);
+  canvas.innerHTML="";
+  const f=+tf.value||10,b=+tb.value||f,e=+te.value||10,d=+td.value||e;
+  loteData={f,b,e,d};
+  const maxW=Math.max(f,b), maxH=Math.max(e,d);
+  const lote=document.createElement("div");
+  lote.id="lote";
+  lote.style.width=(maxW*escala)+"px";
+  lote.style.height=(maxH*escala)+"px";
+  lote.style.left="40px";
+  lote.style.top="40px";
+  lote.style.clipPath=`polygon(
+    0% 0%,
+    ${(f/maxW)*100}% 0%,
+    ${(b/maxW)*100}% ${(d/maxH)*100}%,
+    0% ${(e/maxH)*100}%
+  )`;
+  canvas.appendChild(lote);
+  areaTerreno.innerText=((f+b)/2*((e+d)/2)).toFixed(2)+" m²";
+  atualizarBlocos();
 }
 
 function addComodo(){
-if(!loteData) return alert("Desenhe o terreno primeiro");
-const f=+cf.value||1,b=+cb.value||f,e=+ce.value||1,d=+cd.value||e;
-const maxW=Math.max(f,b),maxH=Math.max(e,d);
-const c=document.createElement("div");
-c.className="comodo";
-c.style.width=(maxW*escala)+"px";
-c.style.height=(maxH*escala)+"px";
-c.style.left="50px";
-c.style.top="50px";
-c.innerText=ctipo.value||"Cômodo";
-canvas.appendChild(c);
-areaTotal+=((f+b)/2)*((e+d)/2);
-area.innerText=areaTotal.toFixed(2)+" m²";
+  if(!loteData) return alert("Desenhe o terreno primeiro");
+  const f=+cf.value||1,b=+cb.value||f,e=+ce.value||1,d=+cd.value||e;
+  const maxW=Math.max(f,b), maxH=Math.max(e,d);
+  const c=document.createElement("div");
+  c.className="comodo";
+  c.style.width=(maxW*escala)+"px";
+  c.style.height=(maxH*escala)+"px";
+  c.style.left="60px";
+  c.style.top="60px";
+  c.style.clipPath=`polygon(
+    0% 0%,
+    ${(f/maxW)*100}% 0%,
+    ${(b/maxW)*100}% ${(d/maxH)*100}%,
+    0% ${(e/maxH)*100}%
+  )`;
+  c.innerText=ctipo.value||"Cômodo";
+
+  const ctr=document.createElement("div");
+  ctr.className="controls";
+  ctr.innerHTML=`<button onclick="girar(this)">⟳</button><button onclick="excluir(this)">✕</button>`;
+  c.appendChild(ctr);
+
+  ativarDrag(c);
+  canvas.appendChild(c);
+
+  areaConstruida+=((f+b)/2)*((e+d)/2);
+  areaConstruidaElem();
+  atualizarBlocos();
+}
+
+function areaConstruidaElem(){
+  areaConstruidaElem;
+  areaConstruidaElem = document.getElementById("areaConstruida");
+  areaConstruidaElem.innerText=areaConstruida.toFixed(2)+" m²";
+}
+
+function atualizarBlocos(){
+  let perimetro=0;
+  document.querySelectorAll(".comodo").forEach(el=>{
+    const w=el.offsetWidth/escala;
+    const h=el.offsetHeight/escala;
+    perimetro+=2*(w+h);
+  });
+  blocos.innerText=Math.ceil(perimetro*alturaParede);
+}
+
+function girar(btn){
+  const c=btn.parentElement.parentElement;
+  const r=(c.dataset.rot||0);
+  c.dataset.rot=(+r+90)%360;
+  c.style.transform=`rotate(${c.dataset.rot}deg)`;
+}
+function excluir(btn){
+  const c=btn.parentElement.parentElement;
+  canvas.removeChild(c);
+  atualizarBlocos();
+}
+
+function ativarDrag(el){
+  let ox,oy;
+  el.onmousedown=e=>{
+    ox=e.offsetX;oy=e.offsetY;
+    document.onmousemove=ev=>{
+      let x=ev.pageX-canvas.offsetLeft-ox;
+      let y=ev.pageY-canvas.offsetTop-oy;
+      const snap=10;
+      document.querySelectorAll(".comodo").forEach(o=>{
+        if(o!==el){
+          if(Math.abs(o.offsetLeft-(x+el.offsetWidth))<snap) x=o.offsetLeft-el.offsetWidth;
+          if(Math.abs((o.offsetLeft+o.offsetWidth)-x)<snap) x=o.offsetLeft+o.offsetWidth;
+          if(Math.abs(o.offsetTop-(y+el.offsetHeight))<snap) y=o.offsetTop-el.offsetHeight;
+          if(Math.abs((o.offsetTop+o.offsetHeight)-y)<snap) y=o.offsetTop+o.offsetHeight;
+        }
+      });
+      el.style.left=x+"px";
+      el.style.top=y+"px";
+    };
+    document.onmouseup=()=>{document.onmousemove=null};
+  };
 }
 </script>
 
