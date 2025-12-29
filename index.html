@@ -6,108 +6,115 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+:root{
+  --laranja:#ea580c;
+  --escuro:#0f172a;
+}
 body{
   margin:0;
   font-family:Arial, Helvetica, sans-serif;
-  background:#f4f6f8;
-  color:#1e293b;
+  background:#f1f5f9;
 }
 header{
-  background:#0f172a;
+  background:var(--escuro);
   color:#fff;
-  padding:16px 24px;
-  border-bottom:5px solid #ea580c;
+  padding:14px 20px;
+  border-bottom:4px solid var(--laranja);
 }
 header h1{
   margin:0;
   font-size:22px;
   font-weight:900;
-  letter-spacing:-0.5px;
 }
-header small{
-  color:#94a3b8;
-  font-weight:bold;
+header span{
+  font-size:11px;
+  color:#cbd5e1;
 }
 main{
   max-width:1400px;
   margin:auto;
-  padding:20px;
+  padding:16px;
   display:grid;
   grid-template-columns:360px 1fr;
-  gap:20px;
+  gap:16px;
 }
-section{
+@media(max-width:900px){
+  main{grid-template-columns:1fr;}
+}
+.card{
   background:#fff;
   border-radius:12px;
-  padding:16px;
-  margin-bottom:14px;
-  box-shadow:0 4px 10px rgba(0,0,0,.05);
+  padding:14px;
+  margin-bottom:12px;
+  box-shadow:0 4px 12px rgba(0,0,0,.05);
 }
-section h3{
-  margin:0 0 10px 0;
+.card h3{
   font-size:11px;
   text-transform:uppercase;
   color:#64748b;
+  margin:0 0 8px;
 }
 label{
   font-size:12px;
   font-weight:bold;
 }
-input, select{
+input,select{
   width:100%;
-  padding:8px;
+  padding:7px;
   margin-top:4px;
-  margin-bottom:8px;
+  margin-bottom:6px;
   border-radius:6px;
   border:1px solid #cbd5e1;
 }
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.grid4{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
 button{
-  padding:10px;
+  padding:9px;
   border:none;
   border-radius:8px;
-  background:#ea580c;
-  color:#fff;
   font-weight:bold;
   cursor:pointer;
 }
-button.alt{background:#334155;}
-button.sel{background:#16a34a;}
+.btn{background:var(--laranja);color:#fff;}
+.btn-alt{background:#334155;color:#fff;}
+.btn-sel{background:#16a34a;color:#fff;}
+.canvas-wrap{
+  background:#fff;
+  border-radius:18px;
+  padding:10px;
+  box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
 .canvas{
   background:#f8fafc;
   border:2px dashed #cbd5e1;
-  border-radius:18px;
+  border-radius:14px;
+  height:420px;
   position:relative;
   overflow:hidden;
 }
 #lote{
   position:absolute;
   border:3px solid #475569;
-  background:rgba(148,163,184,.08);
+  background:rgba(148,163,184,.12);
 }
 .comodo{
   position:absolute;
   background:rgba(255,237,213,.95);
-  border:2px solid #ea580c;
+  border:2px solid var(--laranja);
   font-size:10px;
   font-weight:bold;
-  text-align:center;
   display:flex;
   align-items:center;
   justify-content:center;
-  cursor:move;
 }
 footer{
-  background:#0f172a;
+  background:var(--escuro);
   color:#fff;
-  padding:14px 24px;
+  padding:12px 20px;
+  border-top:4px solid var(--laranja);
   display:flex;
   justify-content:space-between;
   align-items:center;
-  border-top:5px solid #ea580c;
 }
-footer strong{font-size:18px;}
 </style>
 </head>
 
@@ -115,15 +122,14 @@ footer strong{font-size:18px;}
 
 <header>
   <h1>RENOVA BLOCOS | PAREDES RÁPIDAS T & A</h1>
-  <small>CUB / SINAPI dinâmicos • Simulador técnico</small>
+  <span>Simulador técnico • Página 1</span>
 </header>
 
 <main>
 
-<!-- PAINEL ESQUERDO -->
 <div>
 
-<section>
+<div class="card">
 <h3>Localização</h3>
 <select id="estado" onchange="atualizarIndices()">
 <option value="">Estado</option>
@@ -132,24 +138,24 @@ footer strong{font-size:18px;}
 <option value="SC">Santa Catarina</option>
 </select>
 <input id="cidade" placeholder="Cidade">
-<div><strong>CUB:</strong> <span id="cub">R$ 0,00</span></div>
-<div><strong>SINAPI:</strong> <span id="sinapi">R$ 0,00</span></div>
-</section>
+<div><b>CUB:</b> <span id="cub">R$ 0,00</span></div>
+<div><b>SINAPI:</b> <span id="sinapi">R$ 0,00</span></div>
+</div>
 
-<section>
+<div class="card">
 <h3>Padrão construtivo</h3>
-<button onclick="setPadrao(0.9)" class="alt">Popular</button>
-<button onclick="setPadrao(1)" class="sel">Médio</button>
-<button onclick="setPadrao(1.25)" class="alt">Alto</button>
-</section>
+<button class="btn-alt" onclick="setPadrao(0.9)">Popular</button>
+<button class="btn-sel" onclick="setPadrao(1)">Médio</button>
+<button class="btn-alt" onclick="setPadrao(1.25)">Alto</button>
+</div>
 
-<section>
+<div class="card">
 <h3>Tipo de obra</h3>
-<button onclick="setTipo(1)" class="sel">Residencial</button>
-<button onclick="setTipo(1.15)" class="alt">Comercial</button>
-</section>
+<button class="btn-sel" onclick="setTipo(1)">Residencial</button>
+<button class="btn-alt" onclick="setTipo(1.15)">Comercial</button>
+</div>
 
-<section>
+<div class="card">
 <h3>Terreno (m)</h3>
 <div class="grid2">
 <input id="tf" placeholder="Frente">
@@ -157,10 +163,10 @@ footer strong{font-size:18px;}
 <input id="te" placeholder="Esq">
 <input id="td" placeholder="Dir">
 </div>
-<button onclick="desenharLote()">Desenhar terreno</button>
-</section>
+<button class="btn" onclick="desenharLote()">Desenhar terreno</button>
+</div>
 
-<section>
+<div class="card">
 <h3>Cômodo</h3>
 <input id="ctipo" placeholder="Tipo do cômodo">
 <div class="grid2">
@@ -169,18 +175,19 @@ footer strong{font-size:18px;}
 <input id="ce" placeholder="Esq">
 <input id="cd" placeholder="Dir">
 </div>
-<button onclick="addComodo()">Adicionar cômodo</button>
-</section>
+<button class="btn" onclick="addComodo()">Adicionar cômodo</button>
+</div>
 
 </div>
 
-<!-- PLANTA -->
+<div class="canvas-wrap">
 <div class="canvas" id="canvas"></div>
+</div>
 
 </main>
 
 <footer>
-<div>Área construída: <strong id="area">0 m²</strong></div>
+<div>Área construída: <b id="area">0 m²</b></div>
 <div>RENOVA BLOCOS</div>
 </footer>
 
@@ -190,35 +197,43 @@ BA:{cub:2150,sinapi:1950},
 SP:{cub:2480,sinapi:2250},
 SC:{cub:2300,sinapi:2100}
 };
-let padrao=1,tipo=1,escala=15,areaTotal=0;
+let padrao=1,tipo=1,escala=12,areaTotal=0;
+let loteData=null;
 
 function atualizarIndices(){
-const uf=document.getElementById("estado").value;
+const uf=estado.value;
 if(!uf)return;
-document.getElementById("cub").innerText=(estados[uf].cub*padrao*tipo).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
-document.getElementById("sinapi").innerText=(estados[uf].sinapi*padrao*tipo).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+cub.innerText=(estados[uf].cub*padrao*tipo).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+sinapi.innerText=(estados[uf].sinapi*padrao*tipo).toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
 }
 
 function setPadrao(v){padrao=v;atualizarIndices();}
 function setTipo(v){tipo=v;atualizarIndices();}
 
 function desenharLote(){
-const f=+tf.value,b=+tb.value,e=+te.value,d=+td.value;
+canvas.innerHTML="";
+const f=+tf.value||10,b=+tb.value||f,e=+te.value||10,d=+td.value||e;
+loteData={f,b,e,d};
+const maxW=Math.max(f,b),maxH=Math.max(e,d);
 const lote=document.createElement("div");
 lote.id="lote";
-lote.style.width=(Math.max(f,b)*escala)+"px";
-lote.style.height=(Math.max(e,d)*escala)+"px";
-lote.style.left="40px";lote.style.top="40px";
-canvas.innerHTML="";canvas.appendChild(lote);
+lote.style.width=(maxW*escala)+"px";
+lote.style.height=(maxH*escala)+"px";
+lote.style.left="40px";
+lote.style.top="40px";
+canvas.appendChild(lote);
 }
 
 function addComodo(){
-const c=document.createElement("div");
+if(!loteData) return alert("Desenhe o terreno primeiro");
 const f=+cf.value||1,b=+cb.value||f,e=+ce.value||1,d=+cd.value||e;
+const maxW=Math.max(f,b),maxH=Math.max(e,d);
+const c=document.createElement("div");
 c.className="comodo";
-c.style.width=(Math.max(f,b)*escala)+"px";
-c.style.height=(Math.max(e,d)*escala)+"px";
-c.style.left="60px";c.style.top="60px";
+c.style.width=(maxW*escala)+"px";
+c.style.height=(maxH*escala)+"px";
+c.style.left="50px";
+c.style.top="50px";
 c.innerText=ctipo.value||"Cômodo";
 canvas.appendChild(c);
 areaTotal+=((f+b)/2)*((e+d)/2);
