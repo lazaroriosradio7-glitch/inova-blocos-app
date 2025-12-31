@@ -1,43 +1,66 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Renova Blocos | Simulador Oficial</title>
+    <title>Configurador Renova Blocos | Oficial 2025</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .step-inactive { display: none !important; }
-        .canvas-bg { background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 20px 20px; background-color: #f8fafc; padding-bottom: 100px; }
+        .canvas-bg { 
+            background-image: radial-gradient(#cbd5e1 1px, transparent 1px); 
+            background-size: 20px 20px; 
+            background-color: #f8fafc;
+        }
         .comodo-obj { position: absolute; z-index: 10; cursor: move; }
-        .comodo-body { width: 100%; height: 100%; background: rgba(255, 237, 213, 0.95); border: 2px solid #ea580c; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 10px; text-align: center; }
-        .controles { position: absolute; top: -35px; left: 0; display: flex; gap: 4px; z-index: 50; }
-        .btn-acao { background: #0f172a; color: white; padding: 4px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; border: none; font-weight: bold; }
+        .comodo-body { 
+            width: 100%; height: 100%; 
+            background: rgba(255, 237, 213, 0.95); 
+            border: 2px solid #ea580c; 
+            display: flex; align-items: center; justify-content: center; 
+            font-weight: 900; font-size: 10px; text-align: center; color: #1e293b;
+            text-transform: uppercase;
+        }
+        .controles { 
+            position: absolute; top: -40px; left: 0; 
+            display: flex; gap: 4px; z-index: 50; 
+        }
+        .btn-acao { 
+            background: #1e293b; color: white; padding: 4px 10px; 
+            border-radius: 6px; font-size: 10px; cursor: pointer; border: none; 
+            font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
         .btn-acao:hover { background: #ea580c; }
-        .padrao-active { border-color: #ea580c !important; background: #fff7ed !important; color: #ea580c !important; }
+        .padrao-active { border-color: #ea580c !important; background: #fff7ed !important; color: #ea580c !important; font-weight: 900; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
 <body class="bg-slate-100 text-slate-900 font-sans">
 
-    <header class="bg-slate-900 text-white p-4 border-b-4 border-orange-600 sticky top-0 z-50 shadow-xl">
-        <div class="max-w-[1400px] mx-auto flex justify-between items-center">
+    <header class="bg-slate-900 text-white p-4 border-b-4 border-orange-600 sticky top-0 z-50 shadow-2xl">
+        <div class="max-w-[1500px] mx-auto flex justify-between items-center">
             <div>
-                <h1 class="text-xl font-black italic uppercase tracking-tighter">RENOVA <span class="text-orange-600">BLOCOS</span></h1>
+                <h1 class="text-2xl font-black italic uppercase tracking-tighter">RENOVA <span class="text-orange-600">BLOCOS</span></h1>
                 <p class="text-[9px] text-slate-400 uppercase font-bold tracking-widest">Paredes Rápidas EPS • 71 98739-3020</p>
             </div>
             <div class="text-right">
-                <p class="text-[9px] font-bold text-slate-500 uppercase">SINAPI/IBGE 2025</p>
+                <p class="text-[9px] font-bold text-slate-500 uppercase">Índice SINAPI/IBGE 2025</p>
                 <p id="header-sinapi" class="text-sm font-black text-orange-500 italic">R$ 0,00 /m²</p>
             </div>
         </div>
     </header>
 
-    <main class="max-w-[1400px] mx-auto p-4 grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <div id="etapa-1" class="lg:col-span-12 grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div class="lg:col-span-4 xl:col-span-3 space-y-4">
-                <section class="bg-white p-4 rounded-xl shadow-sm border">
-                    <h3 class="text-[10px] font-black uppercase mb-3 text-slate-400">1. Localização e Tipo</h3>
-                    <select id="estado" onchange="calcIndices()" class="w-full p-2 text-sm border-2 rounded-lg font-bold bg-slate-50 mb-2">
+    <main class="max-w-[1500px] mx-auto p-4 lg:p-6">
+        <div id="etapa-1" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- PAINEL DE CONFIGURAÇÃO -->
+            <div class="lg:col-span-4 xl:col-span-3 space-y-4 h-[calc(100vh-140px)] overflow-y-auto pr-2 custom-scrollbar">
+                
+                <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-[10px] font-black uppercase mb-3 text-slate-400 italic">1. Localização e Tipo</h3>
+                    <select id="estado" onchange="calcIndices()" class="w-full p-3 text-xs border-2 border-slate-100 rounded-xl font-black bg-slate-50 mb-2 outline-none focus:border-orange-500">
                         <option value="">Escolha o Estado</option>
                         <option value="1300,1720,2250">Bahia (BA)</option>
                         <option value="1480,1973,2700">São Paulo (SP)</option>
@@ -46,85 +69,130 @@
                         <option value="1320,1743,2350">Minas Gerais (MG)</option>
                         <option value="1530,2025,2700">Paraná (PR)</option>
                         <option value="1420,1873,2450">Rio Grande do Sul (RS)</option>
+                        <option value="1336,1760,2300">Ceará (CE)</option>
                     </select>
-                    <select id="tipo_obra" onchange="calcIndices()" class="w-full p-2 text-sm border-2 rounded-lg font-bold bg-slate-50">
+                    <select id="tipo_obra" onchange="calcIndices()" class="w-full p-3 text-xs border-2 border-slate-100 rounded-xl font-black bg-slate-50 outline-none focus:border-orange-500">
                         <option value="1">Residencial</option>
                         <option value="1.15">Comercial / Industrial (+15%)</option>
                     </select>
                 </section>
 
-                <section class="bg-white p-4 rounded-xl shadow-sm border">
-                    <h3 class="text-[10px] font-black uppercase mb-3 text-slate-400">2. Terreno e Altura</h3>
-                    <div class="grid grid-cols-2 gap-2 mb-2">
-                        <input type="number" id="tf" placeholder="Frente (m)" oninput="drawLote()" class="p-2 text-xs border rounded font-bold">
-                        <input type="number" id="te" placeholder="Lateral (m)" oninput="drawLote()" class="p-2 text-xs border rounded font-bold">
+                <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-[10px] font-black uppercase mb-3 text-slate-400 italic">2. Terreno e Paredes</h3>
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <input type="number" id="tf" placeholder="Frente (m)" oninput="drawLote()" class="p-3 text-xs border-2 border-slate-100 rounded-xl font-black">
+                        <input type="number" id="te" placeholder="Lateral (m)" oninput="drawLote()" class="p-3 text-xs border-2 border-slate-100 rounded-xl font-black">
                     </div>
-                    <div class="bg-orange-50 p-2 rounded-lg border border-orange-100">
+                    <div class="bg-orange-50 p-3 rounded-xl border border-orange-100">
                         <label class="text-[9px] font-black text-orange-700 uppercase">Altura das Paredes (m)</label>
                         <input type="number" id="alt_p" value="2.8" step="0.1" oninput="updateTotals()" class="w-full p-1 text-sm font-black bg-transparent outline-none">
                     </div>
                 </section>
 
-                <section class="bg-white p-4 rounded-xl shadow-sm border">
-                    <h3 class="text-[10px] font-black uppercase mb-3 text-slate-400">3. Adicionar Cômodo</h3>
-                    <input type="text" id="c_nome" placeholder="Nome (ex: Suíte)" class="w-full p-2 text-sm border rounded-lg mb-2">
-                    <div class="grid grid-cols-2 gap-2 mb-2">
-                        <input type="number" id="cf" placeholder="Largura (m)" class="p-2 text-xs border rounded font-bold">
-                        <input type="number" id="cl" placeholder="Compr. (m)" class="p-2 text-xs border rounded font-bold">
+                <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-[10px] font-black uppercase mb-3 text-slate-400 italic">3. Adicionar Ambiente</h3>
+                    <input type="text" id="c_nome" placeholder="Nome: Ex Suíte, Sala..." class="w-full p-3 text-xs border-2 border-slate-100 rounded-xl mb-2 font-black">
+                    <div class="grid grid-cols-2 gap-2 mb-3">
+                        <input type="number" id="cf" placeholder="Largura (m)" class="p-3 text-xs border-2 border-slate-100 rounded-xl font-black">
+                        <input type="number" id="cl" placeholder="Comp. (m)" class="p-3 text-xs border-2 border-slate-100 rounded-xl font-black">
                     </div>
-                    <button onclick="addRoom()" class="w-full py-2 bg-slate-800 text-white rounded-lg text-[10px] font-black uppercase">Incluir Ambiente</button>
+                    <button onclick="addRoom()" class="w-full py-3 bg-slate-800 text-white rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-orange-600 transition-all">Incluir na Planta</button>
                 </section>
 
-                <section class="bg-white p-4 rounded-xl shadow-sm border">
-                    <h3 class="text-[10px] font-black uppercase mb-3 text-slate-400">4. Padrão Construtivo</h3>
+                <section class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-[10px] font-black uppercase mb-3 text-slate-400 italic">4. Padrão de Acabamento</h3>
                     <div class="grid grid-cols-3 gap-1">
-                        <button onclick="setPadrao(0, this)" class="p-padrao p-2 border rounded text-[9px] font-black uppercase">Popular</button>
-                        <button onclick="setPadrao(1, this)" class="p-padrao p-2 border rounded text-[9px] font-black uppercase padrao-active">Médio</button>
-                        <button onclick="setPadrao(2, this)" class="p-padrao p-2 border rounded text-[9px] font-black uppercase">Luxo</button>
+                        <button onclick="setPadrao(0, this)" class="p-padrao p-2 border-2 border-slate-100 rounded-xl text-[8px] font-black uppercase">Popular</button>
+                        <button onclick="setPadrao(1, this)" class="p-padrao p-2 border-2 border-slate-100 rounded-xl text-[8px] font-black uppercase padrao-active">Médio</button>
+                        <button onclick="setPadrao(2, this)" class="p-padrao p-2 border-2 border-slate-100 rounded-xl text-[8px] font-black uppercase">Luxo</button>
                     </div>
                 </section>
-                <button onclick="verResumo()" class="w-full py-4 bg-orange-600 text-white rounded-xl font-black uppercase italic shadow-lg">Ver Comparativo de Preços →</button>
+
+                <button onclick="verResumo()" class="w-full py-4 bg-orange-600 text-white rounded-2xl font-black uppercase italic shadow-xl transform hover:scale-105 transition-all">Ver Orçamento Detalhado →</button>
             </div>
 
+            <!-- CANVAS (ÁREA DE DESENHO) -->
             <div class="lg:col-span-8 xl:col-span-9">
-                <div class="bg-white rounded-[2rem] shadow-xl border overflow-hidden flex flex-col h-[calc(100vh-160px)]">
+                <div class="bg-white rounded-[3rem] shadow-2xl border-2 border-slate-200 overflow-hidden flex flex-col h-[calc(100vh-140px)]">
                     <div id="canvas" class="flex-1 canvas-bg relative overflow-hidden">
-                        <div id="lote-v" class="absolute border-2 border-slate-400 border-dashed pointer-events-none" style="z-index:1"></div>
+                        <div id="lote-v" class="absolute border-2 border-slate-400 border-dashed pointer-events-none" style="z-index:1; opacity: 0.5;"></div>
                     </div>
-                    <div class="p-4 bg-slate-900 text-white flex justify-around text-center">
-                        <div><p class="text-[9px] text-slate-500 uppercase">Área Piso</p><p id="res-area" class="text-lg font-black">0.00 m²</p></div>
-                        <div><p class="text-[9px] text-slate-500 uppercase">Paredes EPS</p><p id="res-parede" class="text-lg font-black text-orange-500">0.00 m²</p></div>
+                    <div class="p-6 bg-slate-900 text-white flex justify-around items-center border-t-4 border-orange-600">
+                        <div class="text-center">
+                            <p class="text-[9px] text-slate-500 uppercase font-black">Área de Piso</p>
+                            <p id="res-area" class="text-2xl font-black italic">0.00 m²</p>
+                        </div>
+                        <div class="h-10 w-[1px] bg-white/10"></div>
+                        <div class="text-center">
+                            <p class="text-[9px] text-slate-500 uppercase font-black">Paredes em EPS</p>
+                            <p id="res-parede" class="text-2xl font-black italic text-orange-500">0.00 m²</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="etapa-2" class="step-inactive lg:col-span-12 space-y-6 py-6">
-            <div class="bg-white p-8 rounded-[3rem] shadow-2xl border">
-                <h2 class="text-3xl font-black uppercase italic mb-6 border-l-8 border-orange-600 pl-4">Resumo da Viabilidade</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-slate-900 p-8 rounded-3xl text-white">
-                        <p class="text-orange-500 font-black uppercase text-xs mb-2">Investimento Estimado Total</p>
-                        <h3 id="preco-final" class="text-5xl font-black italic">R$ 0,00</h3>
-                        <p class="text-[10px] text-slate-400 mt-4 uppercase">Valor SINAPI 2025 para o estado selecionado.</p>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="p-4 bg-orange-50 rounded-2xl border border-orange-200">
-                            <h4 class="font-black text-sm uppercase">Diferencial Renova Blocos</h4>
-                            <p class="text-xs text-slate-600 font-bold">Economia de tempo, isolamento térmico superior e redução drástica de entulho na obra.</p>
+        <!-- PÁGINA 2: RESUMO E FECHAMENTO (FUNIL) -->
+        <div id="etapa-2" class="step-inactive py-6 animate-fade-in">
+            <div class="max-w-6xl mx-auto bg-white p-10 rounded-[3.5rem] shadow-2xl border border-slate-200">
+                <div class="flex justify-between items-start mb-10">
+                    <h2 class="text-4xl font-black uppercase italic text-slate-800 border-l-[15px] border-orange-600 pl-6">Viabilidade <span class="text-orange-600">EPS</span></h2>
+                    <button onclick="voltar()" class="text-slate-400 font-black text-xs uppercase underline">Voltar e Ajustar Planta</button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-12">
+                    <div class="bg-slate-900 p-10 rounded-[3rem] text-white shadow-2xl relative overflow-hidden">
+                        <div class="absolute -right-10 -top-10 opacity-10 text-[120px] font-black italic">EPS</div>
+                        <p class="text-orange-500 font-black uppercase text-xs mb-2">Investimento Estimado (Obra Total)</p>
+                        <h3 id="preco-final" class="text-6xl font-black italic tracking-tighter">R$ 0,00</h3>
+                        <div class="mt-8 pt-8 border-t border-white/10 grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-[9px] text-slate-500 uppercase font-bold">Custo Material EPS</p>
+                                <p id="custo-eps-material" class="text-lg font-black text-orange-400">R$ 0,00</p>
+                            </div>
+                            <div>
+                                <p class="text-[9px] text-slate-500 uppercase font-bold">Área Construída</p>
+                                <p id="res-area-final" class="text-lg font-black">0.00 m²</p>
+                            </div>
                         </div>
-                        <button onclick="finalizarZap()" class="w-full py-6 bg-green-600 text-white rounded-2xl font-black uppercase text-xl shadow-xl">
-                            <i class="fa-brands fa-whatsapp"></i> Chamar no WhatsApp
+                    </div>
+
+                    <div class="space-y-6 flex flex-col justify-center">
+                        <div class="p-6 bg-orange-50 rounded-3xl border-2 border-orange-100">
+                            <h4 class="font-black text-lg uppercase italic text-orange-700 mb-2">Construção Inteligente</h4>
+                            <p class="text-sm text-slate-600 font-bold leading-relaxed">Sua obra será até 40% mais rápida que o método tradicional, com isolamento térmico premium e redução de 20% no custo de fundação.</p>
+                        </div>
+                        <button onclick="finalizarZap()" class="w-full py-8 bg-green-600 text-white rounded-[2rem] font-black uppercase text-2xl shadow-2xl hover:scale-105 transition-all flex items-center justify-center gap-4">
+                            <i class="fa-brands fa-whatsapp text-4xl"></i> Receber Memorial Descritivo
                         </button>
-                        <button onclick="voltar()" class="w-full text-slate-400 font-black text-[10px] uppercase underline">Voltar para a Planta</button>
+                    </div>
+                </div>
+
+                <!-- CARDS DE VANTAGENS -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 text-center">
+                        <i class="fa-solid fa-temperature-arrow-down text-2xl text-orange-600 mb-3"></i>
+                        <p class="font-black text-[10px] uppercase">Conforto Térmico</p>
+                    </div>
+                    <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 text-center">
+                        <i class="fa-solid fa-bolt text-2xl text-orange-600 mb-3"></i>
+                        <p class="font-black text-[10px] uppercase">Obra Ultrarápida</p>
+                    </div>
+                    <div class="p-6 bg-slate-50 rounded-3xl border border-slate-100 text-center">
+                        <i class="fa-solid fa-leaf text-2xl text-orange-600 mb-3"></i>
+                        <p class="font-black text-[10px] uppercase">Zero Desperdício</p>
                     </div>
                 </div>
             </div>
         </div>
     </main>
-    <script>
-        let proj = { padraoIdx: 1, escala: 15, comodos: [] };
+📦 PARTE 2: Lógica JavaScript (Copie e cole abaixo da Parte 1)
+code
+Html
+<script>
+        let proj = { padraoIdx: 1, escala: 18, comodos: [] };
 
+        // 1. CÁLCULO DE ÍNDICES SINAPI
         function calcIndices() {
             const select = document.getElementById('estado');
             if(!select.value) return;
@@ -142,49 +210,63 @@
             calcIndices();
         }
 
+        // 2. DESENHO DO TERRENO
         function drawLote() {
             const f = parseFloat(document.getElementById('tf').value) || 0;
             const l = parseFloat(document.getElementById('te').value) || 0;
             const v = document.getElementById('lote-v');
             v.style.width = (f * proj.escala) + 'px';
             v.style.height = (l * proj.escala) + 'px';
-            v.style.left = '50px'; v.style.top = '50px';
+            v.style.left = '60px'; v.style.top = '60px';
         }
 
+        // 3. GERENCIAMENTO DE CÔMODOS
         function addRoom() {
-            const nome = document.getElementById('c_nome').value || "Cômodo";
+            const nome = document.getElementById('c_nome').value || "Ambiente";
             const w = parseFloat(document.getElementById('cf').value) || 0;
             const l = parseFloat(document.getElementById('cl').value) || 0;
-            if(!w || !l) return alert("Informe as medidas do cômodo.");
+            if(!w || !l) return alert("Por favor, informe as medidas do cômodo.");
+            
             const id = Date.now();
-            proj.comodos.push({ id, nome, w, l, x: 80, y: 80, rot: 0 });
+            proj.comodos.push({ id, nome, w, l, x: 100, y: 100, rot: 0 });
             render();
         }
 
         function render() {
             const canvas = document.getElementById('canvas');
             document.querySelectorAll('.comodo-obj').forEach(e => e.remove());
+            
             proj.comodos.forEach(c => {
                 const div = document.createElement('div');
                 div.className = 'comodo-obj';
                 div.style.width = (c.w * proj.escala) + 'px';
                 div.style.height = (c.l * proj.escala) + 'px';
-                div.style.left = c.x + 'px'; div.style.top = c.y + 'px';
-                div.innerHTML = `<div class="controles">
-                                    <button class="btn-acao" onclick="girarRoom(${c.id})">Girar</button>
-                                    <button class="btn-acao" onclick="excluirRoom(${c.id})">✕</button>
-                                 </div>
-                                 <div class="comodo-body">${c.nome}<br>${c.w}x${c.l}</div>`;
+                div.style.left = c.x + 'px'; 
+                div.style.top = c.y + 'px';
                 
+                div.innerHTML = `
+                    <div class="controles">
+                        <button class="btn-acao" onclick="girarRoom(${c.id})">Girar</button>
+                        <button class="btn-acao" onclick="excluirRoom(${c.id})">✕</button>
+                    </div>
+                    <div class="comodo-body">${c.nome}<br><span style="font-size:7px; opacity:0.5">${c.w}x${c.l}m</span></div>
+                `;
+                
+                // LÓGICA DE ARRASTAR
                 div.onmousedown = (e) => {
                     if(e.target.tagName == 'BUTTON') return;
                     let px = e.clientX, py = e.clientY;
                     document.onmousemove = (ev) => {
-                        c.x += (ev.clientX - px); c.y += (ev.clientY - py);
+                        c.x += (ev.clientX - px);
+                        c.y += (ev.clientY - py);
                         px = ev.clientX; py = ev.clientY;
-                        div.style.left = c.x + 'px'; div.style.top = c.y + 'px';
+                        div.style.left = c.x + 'px';
+                        div.style.top = c.y + 'px';
                     };
-                    document.onmouseup = () => { document.onmousemove = null; updateTotals(); };
+                    document.onmouseup = () => { 
+                        document.onmousemove = null; 
+                        updateTotals(); 
+                    };
                 };
                 canvas.appendChild(div);
             });
@@ -202,23 +284,37 @@
             render(); 
         }
 
+        // 4. CÁLCULOS TÉCNICOS
         function updateTotals() {
-            let area = 0, perim = 0;
-            proj.comodos.forEach(c => { area += (c.w * c.l); perim += (c.w * 2) + (c.l * 2); });
+            let areaPiso = 0, perim = 0;
+            proj.comodos.forEach(c => { 
+                areaPiso += (c.w * c.l); 
+                perim += (c.w * 2) + (c.l * 2); 
+            });
             const h = parseFloat(document.getElementById('alt_p').value) || 2.8;
-            document.getElementById('res-area').innerText = area.toFixed(2) + " m²";
-            document.getElementById('res-parede').innerText = (perim * h).toFixed(2) + " m²";
+            const areaParede = perim * h;
             
+            document.getElementById('res-area').innerText = areaPiso.toFixed(2) + " m²";
+            document.getElementById('res-area-final').innerText = areaPiso.toFixed(2) + " m²";
+            document.getElementById('res-parede').innerText = areaParede.toFixed(2) + " m²";
+            
+            // Custo material EPS (R$ 120/m2 de parede)
+            const materialEps = areaParede * 120;
+            document.getElementById('custo-eps-material').innerText = materialEps.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+
             const select = document.getElementById('estado');
             if(select.value) {
                 const vals = select.value.split(',');
                 const precoM2 = parseFloat(vals[proj.padraoIdx]) * parseFloat(document.getElementById('tipo_obra').value);
-                document.getElementById('preco-final').innerText = (area * precoM2).toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+                const totalObra = areaPiso * precoM2;
+                document.getElementById('preco-final').innerText = totalObra.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
             }
         }
 
+        // 5. NAVEGAÇÃO FUNIL
         function verResumo() {
-            if(!document.getElementById('estado').value) return alert("Selecione o Estado primeiro!");
+            if(!document.getElementById('estado').value) return alert("Selecione o Estado para o cálculo SINAPI.");
+            if(proj.comodos.length == 0) return alert("Adicione ao menos um cômodo para calcular.");
             document.getElementById('etapa-1').classList.add('step-inactive');
             document.getElementById('etapa-2').classList.remove('step-inactive');
             window.scrollTo(0,0);
@@ -231,9 +327,12 @@
 
         function finalizarZap() {
             const area = document.getElementById('res-area').innerText;
-            const msg = `Olá! Usei o simulador da Renova Blocos e gostaria de um orçamento para meu projeto de ${area}.`;
-            window.open(`https://wa.me/5571987393020?text=${encodeURIComponent(msg)}`, '_blank');
+            const zapMsg = `Olá Renova Blocos! Usei o simulador e projetei uma obra de ${area}. Gostaria de receber o memorial descritivo.`;
+            window.open(`https://wa.me/5571987393020?text=${encodeURIComponent(zapMsg)}`, '_blank');
         }
+
+        // Início
+        calcIndices();
     </script>
 </body>
 </html>
