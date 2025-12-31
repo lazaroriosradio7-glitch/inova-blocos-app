@@ -2,126 +2,109 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Renova Blocos | Paredes Rápidas EPS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Renova Blocos | Simulador Técnico Oficial</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        
         :root { --laranja: #ea580c; --escuro: #0f172a; --bg: #f1f5f9; }
         body { background-color: var(--bg); font-family: 'Inter', sans-serif; }
         .step-inactive { display: none !important; }
 
-        /* Canvas com Grid Maior (Escala 35) */
+        /* Canvas com Grid Profissional */
         .canvas-container {
-            background: white; border-radius: 24px; border: 1px solid #e2e8f0;
+            background: white; border-radius: 20px; border: 1px solid #e2e8f0;
             background-image: linear-gradient(#e2e8f0 1px, transparent 1px), linear-gradient(90deg, #e2e8f0 1px, transparent 1px);
-            background-size: 35px 35px;
-            position: relative; overflow: auto; height: 600px;
-            touch-action: none;
+            background-size: 35px 35px; position: relative; overflow: auto; height: 60vh; min-height: 450px;
         }
 
-        /* Objetos de Desenho com Borda Laranja em todos os lados */
+        /* Borda Laranja em todos os lados (Irregulares) */
         .shape-obj {
             position: absolute; z-index: 10; cursor: move;
             filter: drop-shadow(2px 0 0 var(--laranja)) drop-shadow(-2px 0 0 var(--laranja)) 
                     drop-shadow(0 2px 0 var(--laranja)) drop-shadow(0 -2px 0 var(--laranja));
         }
         .shape-inner { 
-            width: 100%; height: 100%; background: rgba(255, 247, 237, 0.95); 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 13px; font-weight: 900; text-transform: uppercase; color: #1e293b; 
+            width: 100%; height: 100%; background: rgba(255, 237, 213, 0.95); 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            font-size: 11px; font-weight: 900; text-transform: uppercase; color: #1e293b; text-align: center;
         }
+        .medida-label { font-size: 9px; color: var(--laranja); font-weight: 800; }
 
-        /* Botões flutuantes */
-        .controls { position: absolute; top: -45px; left: 0; display: flex; gap: 6px; z-index: 50; }
-        .btn-mini { background: var(--escuro); color: white; padding: 6px 14px; border-radius: 8px; font-size: 11px; cursor: pointer; border: 2px solid var(--laranja); font-weight: 800; }
+        /* Controles */
+        .controls { position: absolute; top: -45px; left: 0; display: flex; gap: 4px; z-index: 50; }
+        .btn-mini { background: var(--escuro); color: white; padding: 6px 12px; border-radius: 6px; font-size: 10px; border: 2px solid var(--laranja); font-weight: 800; }
 
-        /* Estilo dos Cards de Vantagem na Etapa 2 */
-        .advantage-card { 
-            background: white; border-radius: 32px; padding: 40px; 
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
-            border: 1px solid #f1f5f9; text-align: center;
+        /* Tabela Mobile Safe */
+        .renova-row { background: var(--laranja) !important; color: white !important; }
+        .renova-row td { padding: 15px !important; border: none !important; }
+
+        .status-bar { background: var(--escuro); color: white; border-top: 4px solid var(--laranja); position: fixed; bottom: 0; width: 100%; z-index: 1000; }
+        .sidebar-input { width: 100%; padding: 10px; border: 2px solid #f1f5f9; border-radius: 10px; font-weight: bold; margin-bottom: 5px; outline: none; font-size: 14px; }
+        
+        @media (max-width: 768px) {
+            .status-bar { padding: 10px; }
+            .canvas-container { height: 45vh; }
         }
-        .advantage-card i { font-size: 40px; margin-bottom: 20px; color: var(--laranja); }
-        .advantage-card.dark { background: var(--escuro); color: white; }
-        .advantage-card.orange { background: var(--laranja); color: white; }
-        .advantage-card.orange i { color: white; }
-
-        /* Destaque Tabela */
-        .renova-row { 
-            background: var(--laranja) !important; 
-            color: white !important; 
-            box-shadow: 0 10px 15px -3px rgba(234, 88, 12, 0.4);
-        }
-        .renova-row td { padding: 30px 20px !important; border: none !important; }
-
-        .sidebar-input { width: 100%; padding: 12px; border: 2px solid #f1f5f9; border-radius: 12px; font-weight: bold; margin-bottom: 8px; outline: none; }
-        .sidebar-input:focus { border-color: var(--laranja); }
     </style>
 </head>
 <body>
 
-<!-- ETAPA 0: HOME -->
-<div id="etapa-0" class="min-h-screen bg-white flex flex-col items-center justify-center p-6 text-center">
-    <span class="bg-orange-100 text-orange-700 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest mb-4">RENOVA BLOCOS T & A</span>
-    <h1 class="text-6xl md:text-8xl font-black text-slate-900 tracking-tighter mb-6 leading-none">A sua obra na era <br><span class="text-orange-600 italic">do EPS.</span></h1>
-    <p class="text-slate-500 text-lg max-w-2xl mb-10 font-medium italic">Projete sua casa, calcule os custos e descubra por que o sistema de Paredes Prontas EPS é a escolha mais inteligente e rápida do mercado.</p>
-    <div class="flex flex-wrap justify-center gap-4">
-        <button onclick="irParaSimulador()" class="bg-slate-900 text-white px-12 py-6 rounded-2xl font-black uppercase text-lg shadow-2xl hover:bg-orange-600 transition duration-300">Abrir Simulador Técnico</button>
-    </div>
-</div>
-
-<!-- ETAPA 1: SIMULADOR -->
-<div id="etapa-1" class="step-inactive">
-    <header class="p-4 flex justify-between items-center sticky top-0 z-[100]">
-        <div>
-            <h1 class="text-xl font-black italic tracking-tighter uppercase text-white">RENOVA <span class="text-orange-500">BLOCOS</span> | PAREDES RÁPIDAS</h1>
-        </div>
-        <div class="flex gap-6 items-center text-white">
-            <div class="hidden md:block text-right">
-                <p class="text-[9px] text-slate-400 font-bold uppercase">SINAPI/IBGE 2025</p>
-                <p id="header-sinapi" class="text-sm font-black text-orange-500 tracking-tighter">R$ 0,00 /m²</p>
+<div id="etapa-1">
+    <header class="p-4 bg-slate-900 border-b-4 border-orange-600 flex justify-between items-center text-white shadow-2xl">
+        <h1 class="text-xl font-black italic tracking-tighter uppercase">RENOVA <span class="text-orange-500">BLOCOS</span></h1>
+        <div class="text-right flex gap-4">
+            <div class="hidden md:block border-r border-white/10 pr-4">
+                <p class="text-[9px] text-slate-400 font-bold uppercase">CUB 2025</p>
+                <p id="h-cub" class="text-xs font-black text-orange-400 tracking-tighter">R$ 0,00</p>
             </div>
-            <div class="bg-white/10 px-6 py-3 rounded-2xl border border-white/5">
-                <p id="header-total" class="text-xl font-black italic">R$ 0,00</p>
+            <div>
+                <p class="text-[9px] text-slate-400 font-bold uppercase">SINAPI 2025</p>
+                <p id="h-sinapi" class="text-xs font-black text-orange-500 tracking-tighter">R$ 0,00 /m²</p>
             </div>
         </div>
     </header>
 
-    <main class="max-w-[1800px] mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+    <main class="max-w-[1800px] mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 pb-48">
         <!-- SIDEBAR -->
-        <div class="lg:col-span-3 space-y-4 overflow-y-auto h-[calc(100vh-220px)] pr-2">
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                <h3 class="text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest italic">1. Configuração Regional</h3>
+        <div class="lg:col-span-3 space-y-4">
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase mb-3 italic">1. Localização e Parâmetros</h3>
                 <select id="estado" onchange="atualizarValores()" class="sidebar-input bg-slate-50">
                     <option value="">Escolha o Estado</option>
-                    <option value="BA">Bahia (BA)</option><option value="SP">São Paulo (SP)</option><option value="SC">Santa Catarina (SC)</option><option value="RJ">Rio de Janeiro (RJ)</option>
+                    <option value="BA">Bahia (BA)</option>
+                    <option value="SP">São Paulo (SP)</option>
+                    <option value="SC">Santa Catarina (SC)</option>
+                    <option value="RJ">Rio de Janeiro (RJ)</option>
                 </select>
-                <input type="text" id="cidade" placeholder="Sua Cidade" class="sidebar-input bg-slate-50">
+                <input type="text" id="cidade" placeholder="Digite a Cidade" class="sidebar-input bg-slate-50">
+                <div class="bg-orange-50 p-2 rounded-xl border border-orange-100 mt-2">
+                    <label class="text-[8px] font-black text-orange-700 uppercase">Altura da Parede (m)</label>
+                    <input type="number" id="h_parede" value="2.8" step="0.1" oninput="atualizarCalculos()" class="w-full bg-transparent font-black text-orange-600 outline-none">
+                </div>
             </div>
 
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                <h3 class="text-[10px] font-black text-slate-400 uppercase mb-4 italic">2. Medidas do Terreno</h3>
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase mb-3 italic">2. Medidas do Terreno</h3>
                 <div class="grid grid-cols-2 gap-2">
                     <input type="number" id="tf" placeholder="Frente" oninput="desenharLote()" class="sidebar-input" value="10">
                     <input type="number" id="tb" placeholder="Fundo" oninput="desenharLote()" class="sidebar-input" value="10">
-                    <input type="number" id="te" placeholder="Esq" oninput="desenharLote()" class="sidebar-input" value="20">
-                    <input type="number" id="td" placeholder="Dir" oninput="desenharLote()" class="sidebar-input" value="20">
+                    <input type="number" id="te" placeholder="Lat. Esq" oninput="desenharLote()" class="sidebar-input" value="20">
+                    <input type="number" id="td" placeholder="Lat. Dir" oninput="desenharLote()" class="sidebar-input" value="20">
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                <h3 class="text-[10px] font-black text-slate-400 uppercase mb-4 italic">3. Adicionar Ambiente</h3>
-                <input type="text" id="cnome" placeholder="Ex: Sala de Estar" class="sidebar-input mb-4">
-                <div class="grid grid-cols-2 gap-2 mb-4">
+            <div class="bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase mb-3 italic">3. Medidas do Cômodo</h3>
+                <input type="text" id="cnome" placeholder="Ex: Sala" class="sidebar-input">
+                <div class="grid grid-cols-2 gap-2 mb-2">
                     <input type="number" id="cf" placeholder="Frente" class="sidebar-input">
                     <input type="number" id="cb" placeholder="Fundo" class="sidebar-input">
-                    <input type="number" id="cl_e" placeholder="Esq" class="sidebar-input">
-                    <input type="number" id="cl_d" placeholder="Dir" class="sidebar-input">
+                    <input type="number" id="cl_e" placeholder="Lat. Esq" class="sidebar-input">
+                    <input type="number" id="cl_d" placeholder="Lat. Dir" class="sidebar-input">
                 </div>
-                <button onclick="addComodo()" class="bg-orange-600 text-white font-black uppercase p-4 rounded-2xl w-full text-xs shadow-lg hover:scale-105 transition">Incluir Ambiente</button>
+                <button onclick="addComodo()" class="bg-orange-600 text-white font-black uppercase p-3 rounded-xl w-full text-xs shadow-lg">Incluir na Planta</button>
             </div>
         </div>
 
@@ -135,94 +118,72 @@
         </div>
     </main>
 
-    <footer class="status-bar fixed bottom-0 left-0 w-full bg-slate-900 text-white p-6 border-t-4 border-orange-600 flex justify-between items-center z-[100]">
-        <div class="flex gap-12 font-bold uppercase text-[10px] tracking-widest">
-            <div>Área Terreno: <span id="res-lote" class="text-orange-500 text-xl ml-2 font-black italic">0.00 m²</span></div>
-            <div>Área Piso: <span id="res-area" class="text-orange-500 text-xl ml-2 font-black italic">0.00 m²</span></div>
-            <div>M² Parede: <span id="res-blocos" class="text-orange-500 text-xl ml-2 font-black italic">0</span></div>
+    <footer class="status-bar p-6 fixed bottom-0 left-0 w-full z-[1000]">
+        <div class="max-w-[1800px] mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-center md:text-left">
+            <div class="grid grid-cols-3 gap-6 font-bold uppercase text-[9px] tracking-widest">
+                <div>Área Terreno<br><span id="res-lote" class="text-orange-500 text-sm font-black italic">0.00 m²</span></div>
+                <div>Área Piso<br><span id="res-area" class="text-orange-500 text-sm font-black italic">0.00 m²</span></div>
+                <div>M² Parede<br><span id="res-blocos" class="text-orange-500 text-sm font-black italic">0</span></div>
+            </div>
+            <button onclick="verResumo()" class="bg-orange-600 w-full md:w-auto px-10 py-4 rounded-xl font-black italic uppercase text-xs hover:scale-105 transition shadow-2xl">
+                Analisar Comparativo →
+            </button>
         </div>
-        <button onclick="verResumo()" class="bg-orange-600 px-10 py-4 rounded-2xl font-black italic uppercase text-sm hover:scale-105 transition shadow-2xl">
-            Ver Comparativo de Preços →
-        </button>
     </footer>
 </div>
 
 <!-- ETAPA 2: COMPARATIVO -->
-<div id="etapa-2" class="step-inactive py-12 px-6">
-    <div class="max-w-7xl mx-auto space-y-12 pb-20">
-        
-        <h2 class="text-5xl font-black italic text-slate-800 uppercase tracking-tighter border-l-[16px] border-orange-600 pl-8 mb-12">Por que escolher <span class="text-orange-600">Renova Blocos?</span></h2>
+<div id="etapa-2" class="step-inactive p-4 lg:p-12 pb-32">
+    <div class="max-w-7xl mx-auto space-y-8">
+        <h2 class="text-3xl font-black italic text-slate-800 uppercase border-l-8 border-orange-600 pl-4">Viabilidade <span class="text-orange-600">Renova Blocos</span></h2>
 
-        <!-- Cards de Vantagens Restaurados -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div class="advantage-card">
-                <i class="fa-solid fa-temperature-arrow-down"></i>
-                <h4 class="font-black italic text-xl uppercase mb-3">Termo Acústico</h4>
-                <p class="text-sm text-slate-500 font-bold leading-relaxed">Isolamento térmico superior que reduz em até 30% os custos com energia elétrica.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="p-6 bg-white rounded-3xl shadow-lg border-b-4 border-orange-500">
+                <h4 class="font-black italic text-sm uppercase">Termo Acústico</h4>
+                <p class="text-[10px] text-slate-500 font-bold leading-tight mt-1">Conforto térmico e economia de energia.</p>
             </div>
-            <div class="advantage-card dark">
-                <i class="fa-solid fa-bolt text-orange-500"></i>
-                <h4 class="font-black italic text-xl uppercase mb-3">Ultrarápido</h4>
-                <p class="text-sm text-slate-300 font-bold leading-relaxed">Redução drástica no tempo de obra. Sua casa pronta em tempo recorde.</p>
+            <div class="p-6 bg-slate-900 text-white rounded-3xl shadow-lg border-b-4 border-orange-500">
+                <h4 class="font-black italic text-sm uppercase">Ultrarápido</h4>
+                <p class="text-[10px] text-slate-400 font-bold leading-tight mt-1">Sua obra 40% mais rápida que a comum.</p>
             </div>
-            <div class="advantage-card">
-                <i class="fa-solid fa-leaf"></i>
-                <h4 class="font-black italic text-xl uppercase mb-3">Zero Madeira</h4>
-                <p class="text-sm text-slate-500 font-bold leading-relaxed">Não utiliza madeira para caixaria de vigas. Obra limpa e sustentável.</p>
-            </div>
-            <div class="advantage-card shadow-xl">
-                <i class="fa-solid fa-weight-hanging"></i>
-                <h4 class="font-black italic text-xl uppercase mb-3">Leveza Estrutural</h4>
-                <p class="text-sm text-slate-500 font-bold leading-relaxed">Redução de carga na fundação, gerando economia real em ferro e concreto.</p>
-            </div>
-            <div class="advantage-card shadow-xl">
-                <i class="fa-solid fa-toolbox"></i>
-                <h4 class="font-black italic text-xl uppercase mb-3">Menos Consumíveis</h4>
-                <p class="text-sm text-slate-500 font-bold leading-relaxed">Economia em pregos, arames e escoras. Menos desperdício no canteiro.</p>
-            </div>
-            <div class="advantage-card orange">
-                <i class="fa-solid fa-users-slash"></i>
-                <h4 class="font-black italic text-xl uppercase mb-3">Menos Mão de Obra</h4>
-                <p class="text-sm text-orange-100 font-bold leading-relaxed">Processo simplificado que exige menos profissionais e evita atrasos.</p>
+            <div class="p-6 bg-white rounded-3xl shadow-lg border-b-4 border-orange-500">
+                <h4 class="font-black italic text-sm uppercase">Obra Limpa</h4>
+                <p class="text-[10px] text-slate-500 font-bold leading-tight mt-1">Zero madeira e zero desperdício.</p>
             </div>
         </div>
 
-        <!-- Tabela Comparativa Corrigida -->
-        <div class="bg-white rounded-[40px] p-8 lg:p-16 shadow-2xl border border-slate-100 overflow-hidden">
-            <h3 class="text-4xl font-black italic mb-10 uppercase text-slate-800 tracking-tighter">Comparativo Tecnológico</h3>
-            <div class="overflow-x-auto rounded-[30px] border border-slate-100">
-                <table class="w-full text-left min-w-[900px]">
-                    <thead class="bg-slate-900 text-white text-[11px] uppercase font-black tracking-widest">
+        <div class="bg-white rounded-3xl p-6 lg:p-12 shadow-2xl border border-slate-100 overflow-hidden">
+            <h3 class="text-2xl font-black italic mb-8 uppercase text-slate-800">Comparativo Tecnológico</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left min-w-[700px]">
+                    <thead class="bg-slate-900 text-white text-[10px] uppercase font-black">
                         <tr>
-                            <th class="p-8">Tecnologia de Parede</th>
-                            <th class="p-8 text-center">Custo M² Parede</th>
-                            <th class="p-8 text-center">Tempo de Obra</th>
-                            <th class="p-8 text-right">Investimento nas Paredes</th>
+                            <th class="p-6">Tecnologia de Parede</th>
+                            <th class="p-6 text-center">Custo M²</th>
+                            <th class="p-6 text-center">Tempo Obra</th>
+                            <th class="p-6 text-right">Total Paredes</th>
                         </tr>
                     </thead>
-                    <tbody id="tabela-comparativa" class="font-bold text-slate-700 text-lg">
-                        <!-- Gerado via JS -->
-                    </tbody>
+                    <tbody id="tabela-comparativa" class="font-bold text-slate-700 text-sm"></tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Card de Preço Chave na Mão -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-slate-100 p-12 rounded-[60px] border-2 border-dashed border-slate-300">
-            <div class="bg-slate-900 p-16 rounded-[50px] text-white shadow-2xl relative overflow-hidden">
-                <p class="text-orange-500 font-black uppercase italic text-xs mb-4 tracking-widest">Investimento Chave na Mão (Estimativa Total)</p>
-                <h3 id="res-total-final" class="text-7xl font-black italic tracking-tighter leading-none mb-8">R$ 0,00</h3>
-                <div class="flex gap-10 border-t border-white/10 pt-8 text-[11px] font-black uppercase text-slate-400">
-                    <p>Local: <span id="res-local-final" class="text-white">Bahia</span></p>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center bg-slate-100 p-8 rounded-[40px] border-2 border-dashed border-slate-300">
+            <div class="bg-slate-900 p-10 rounded-[35px] text-white shadow-2xl text-center lg:text-left relative overflow-hidden">
+                <p class="text-orange-500 font-black uppercase italic text-xs mb-3">Investimento Total Estimado</p>
+                <h3 id="res-total-final" class="text-5xl font-black italic tracking-tighter mb-4 leading-none">R$ 0,00</h3>
+                <div class="text-[10px] text-slate-400 font-black uppercase flex flex-col gap-1">
+                    <p>Cidade: <span id="res-local-final" class="text-white">-</span></p>
                     <p>Área: <span id="res-area-final" class="text-white">0.00 m²</span></p>
                 </div>
             </div>
-            <div class="text-center space-y-8">
-                <h4 class="text-5xl font-black italic uppercase tracking-tighter text-slate-800 leading-tight">Receba seu <br>Orçamento agora.</h4>
-                <button onclick="falarWhatsApp()" class="bg-orange-600 text-white w-full py-8 rounded-[2rem] font-black uppercase italic shadow-2xl text-2xl hover:scale-105 transition flex justify-center items-center gap-4">
+            <div class="text-center lg:text-left">
+                <h4 class="text-3xl font-black italic uppercase text-slate-800 mb-6 leading-tight">Receba seu <br>Orçamento agora.</h4>
+                <button onclick="falarWhatsApp()" class="bg-orange-600 text-white w-full py-6 rounded-3xl font-black uppercase italic shadow-2xl text-xl hover:scale-105 transition flex justify-center items-center gap-4">
                     <i class="fa-brands fa-whatsapp text-4xl"></i> Chamar no WhatsApp
                 </button>
-                <button onclick="voltarConfig()" class="text-slate-400 font-black uppercase text-xs underline">Voltar para a Planta</button>
+                <button onclick="voltarConfig()" class="mt-6 text-slate-400 font-black text-xs underline uppercase w-full text-center">Ajustar Projeto</button>
             </div>
         </div>
     </div>
@@ -237,39 +198,31 @@
     };
 
     let proj = {
-        uf: '', padrao: 1.3, tipo: 1, escala: 35, // ESCALA 35 PARA FICAR GRANDE
-        comodos: [], hParede: 2.8
+        uf: '', escala: 35, comodos: [], hParede: 2.8
     };
 
     function irParaSimulador() {
         document.getElementById('etapa-0').classList.add('step-inactive');
         document.getElementById('etapa-1').classList.remove('step-inactive');
-        window.scrollTo(0,0);
+        desenharLote();
     }
 
     function atualizarValores() {
         proj.uf = document.getElementById('estado').value;
         if(!proj.uf) return;
-        const vSinapi = dadosStates[proj.uf].sinapi * proj.padrao * proj.tipo;
-        document.getElementById('header-sinapi').innerText = `R$ ${vSinapi.toFixed(2)} /m²`;
+        const v = dadosStates[proj.uf];
+        document.getElementById('h-sinapi').innerText = `R$ ${(v.sinapi * 1.3).toFixed(2)} /m²`;
+        document.getElementById('h-cub').innerText = `R$ ${(v.cub * 1.3).toFixed(2)}`;
         atualizarCalculos();
     }
 
-    function setPadrao(val, btn) {
-        proj.padrao = val;
-        document.querySelectorAll('.padrao-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        atualizarValores();
-    }
-
     function desenharLote() {
-        const f = parseFloat(document.getElementById('tf').value) || 1;
-        const b = parseFloat(document.getElementById('tb').value) || 1;
-        const e = parseFloat(document.getElementById('te').value) || 1;
-        const d = parseFloat(document.getElementById('td').value) || 1;
+        const f = parseFloat(document.getElementById('tf').value) || 10;
+        const b = parseFloat(document.getElementById('tb').value) || 10;
+        const e = parseFloat(document.getElementById('te').value) || 20;
+        const d = parseFloat(document.getElementById('td').value) || 20;
         const lote = document.getElementById('lote-v');
         const maxW = Math.max(f, b); const maxH = Math.max(e, d);
-        
         lote.style.width = (maxW * proj.escala) + 'px';
         lote.style.height = (maxH * proj.escala) + 'px';
         lote.style.left = '50px'; lote.style.top = '50px';
@@ -283,7 +236,7 @@
         const b = parseFloat(document.getElementById('cb').value) || f;
         const e = parseFloat(document.getElementById('cl_e').value);
         const d = parseFloat(document.getElementById('cl_d').value) || e;
-        if(!f || !e) return alert("Frente e Lateral!");
+        if(!f || !e) return alert("Frente e Lateral Esq são obrigatórios!");
         proj.comodos.push({ id: Date.now(), nome, f, b, e, d, x: 100, y: 100, rot: 0 });
         renderizar();
     }
@@ -306,7 +259,8 @@
                     <button class="btn-mini" onclick="excluir(${c.id})">✕</button>
                 </div>
                 <div class="shape-inner" style="clip-path: polygon(0% 0%, ${(c.f/maxW)*100}% 0%, ${(c.b/maxW)*100}% 100%, 0% 100%);">
-                    ${c.nome}
+                    <span>${c.nome}</span>
+                    <span class="medida-label">${c.f}x${c.e}m</span>
                 </div>`;
             ativarDrag(wrap, c);
             canvas.appendChild(wrap);
@@ -323,31 +277,30 @@
             el.style.left = data.x + 'px'; el.style.top = data.y + 'px';
         };
         const parar = () => { window.onmousemove = window.ontouchmove = null; atualizarCalculos(); };
-        const iniciar = (ev) => {
+        el.onmousedown = el.ontouchstart = (ev) => {
             if(ev.target.tagName == 'BUTTON') return;
             const t = ev.touches ? ev.touches[0] : ev;
             ox = t.clientX; oy = t.clientY;
             window.onmousemove = window.ontouchmove = mover;
             window.onmouseup = window.ontouchend = parar;
         };
-        el.onmousedown = el.ontouchstart = iniciar;
     }
 
     function girar(id) { const c = proj.comodos.find(r => r.id === id); c.rot = (c.rot + 90) % 360; renderizar(); }
     function excluir(id) { proj.comodos = proj.comodos.filter(r => r.id !== id); renderizar(); }
 
     function atualizarCalculos() {
-        let a = 0, p = 0;
-        proj.comodos.forEach(c => { a += ((c.f+c.b)/2)*((c.e+c.d)/2); p += (c.f+c.b+c.e+c.d); });
-        document.getElementById('res-area').innerText = a.toFixed(2) + " m²";
+        let area = 0, p = 0;
+        proj.hParede = parseFloat(document.getElementById('h_parede').value) || 2.8;
+        proj.comodos.forEach(c => { area += ((c.f+c.b)/2)*((c.e+c.d)/2); p += (c.f+c.b+c.e+c.d); });
+        document.getElementById('res-area').innerText = area.toFixed(2) + " m²";
         const m2p = p * proj.hParede;
         document.getElementById('res-blocos').innerText = Math.ceil(m2p);
         if(proj.uf) {
-            const total = a * dadosStates[proj.uf].sinapi * proj.padrao * proj.tipo;
-            document.getElementById('header-total').innerText = total.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+            const total = area * dadosStates[proj.uf].sinapi * 1.3;
             document.getElementById('res-total-final').innerText = total.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
         }
-        return { area: a, perim: m2p };
+        return { area, m2p };
     }
 
     function verResumo() {
@@ -355,27 +308,19 @@
         const calc = atualizarCalculos();
         document.getElementById('res-area-final').innerText = calc.area.toFixed(2) + " m²";
         document.getElementById('res-local-final').innerText = (document.getElementById('cidade').value || "Bahia") + " / " + proj.uf;
-
         const tecs = [
-            { n: 'Bloco Baiano (Convencional)', m2: 450, t: 'Lento (Meses)', c: calc.perim * 450 },
-            { n: 'Bloco Cimento', m2: 520, t: 'Médio (Semanas)', c: calc.perim * 520 },
-            { n: 'RENOVA BLOCOS EPS (Fábrica)', m2: 120, t: 'ULTRARÁPIDO (HORAS)', c: calc.perim * 120, d: true }
+            { n: 'Bloco Baiano', m2: 450, t: 'Lento', c: calc.m2p * 450 },
+            { n: 'Bloco Cimento', m2: 520, t: 'Médio', c: calc.m2p * 520 },
+            { n: 'RENOVA BLOCOS EPS', m2: 120, t: 'ULTRARÁPIDO', c: calc.m2p * 120, d: true }
         ];
-
         const tbody = document.getElementById('tabela-comparativa');
         tbody.innerHTML = '';
         tecs.forEach(t => {
             const tr = document.createElement('tr');
-            if(t.d) tr.className = "renova-row";
-            else tr.className = "border-b border-slate-50";
-            tr.innerHTML = `
-                <td class="p-8 text-xl font-black">${t.n}</td>
-                <td class="p-8 text-center">R$ ${t.m2},00</td>
-                <td class="p-8 text-center italic text-xs uppercase">${t.t}</td>
-                <td class="p-8 text-right text-2xl font-black">R$ ${t.c.toLocaleString('pt-BR')}</td>`;
+            if(t.d) tr.className = "renova-row shadow-xl"; else tr.className = "border-b border-slate-50";
+            tr.innerHTML = `<td class="p-6">${t.n}</td><td class="text-center">R$ ${t.m2}</td><td class="text-center uppercase text-[10px]">${t.t}</td><td class="text-right">R$ ${t.c.toLocaleString('pt-BR')}</td>`;
             tbody.appendChild(tr);
         });
-
         document.getElementById('etapa-1').classList.add('step-inactive');
         document.getElementById('etapa-2').classList.remove('step-inactive');
         window.scrollTo(0,0);
@@ -387,11 +332,9 @@
     }
 
     function falarWhatsApp() {
-        const msg = `Olá! Usei o Simulador Renova Blocos para meu projeto de ${document.getElementById('res-area').innerText}. Quero o orçamento técnico.`;
+        const msg = `Olá! Usei o Simulador Renova Blocos para uma obra de ${document.getElementById('res-area').innerText}. Quero orçamento técnico.`;
         window.open(`https://wa.me/5571987393020?text=${encodeURIComponent(msg)}`, '_blank');
     }
-
-    desenharLote();
 </script>
 </body>
 </html>
