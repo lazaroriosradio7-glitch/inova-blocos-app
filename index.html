@@ -286,4 +286,75 @@
         };
         const parar = () => { window.onmousemove = window.ontouchmove = null; atualizarCalculos(); };
         el.onmousedown = el.ontouchstart = (ev) => {
-            if(ev.
+            if(ev.target.tagName == 'BUTTON') return;
+            const t = ev.touches ? ev.touches[0] : ev;
+            ox = t.clientX; oy = t.clientY;
+            window.onmousemove = window.ontouchmove = mover;
+            window.onmouseup = window.ontouchend = parar;
+        };
+    }
+
+    function girar(id) { const c = proj.comodos.find(r => r.id === id); c.rot = (c.rot + 90) % 360; renderizar(); }
+    function excluir(id) { proj.comodos = proj.comodos.filter(r => r.id !== id); renderizar(); }
+
+    function atualizarCalculos() {
+        let areaPiso = 0, perim = 0;
+        proj.hParede = parseFloat(document.getElementById('h_parede').value) || 2.8;
+        proj.comodos.forEach(c => { areaPiso += (c.f * c.l); perim += (c.f * 2) + (c.l * 2); });
+        
+        document.getElementById('res-area').innerText = areaPiso.toFixed(2) + " m²";
+        const m2p = perim * proj.hParede;
+        document.getElementById('res-blocos').innerText = Math.ceil(m2p);
+        
+        if(proj.uf) {
+            const total = areaPiso * dadosStates[proj.uf].sinapi * proj.padrao;
+            document.getElementById('res-total-final').innerText = total.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+        }
+        return { area: areaPiso, m2parede: m2p };
+    }
+
+    function verResumo() {
+        if(!proj.uf) return alert("Selecione o Estado!");
+        const calc = atualizarCalculos();
+        document.getElementById('res-area-final').innerText = calc.area.toFixed(2) + " m²";
+        
+        const tecs = [
+            { n: 'Bloco Baiano', m2: 450, t: 'Lento', c: calc.m2parede * 450 },
+            { n: 'Bloco Cimento', m2: 520, t: 'Médio', c: calc.m2parede * 520 },
+            { n: 'RENOVA BLOCOS EPS', m2: 120, t: 'ULTRARÁPIDO', c: calc.m2parede * 120, d: true }
+        ];
+
+        const tbody = document.getElementById('tabela-comparativa');
+        tbody.innerHTML = '';
+        tecs.forEach(t => {
+            const tr = document.createElement('tr');
+            if(t.d) tr.className = "renova-row"; else tr.className = "border-b border-slate-50";
+            tr.innerHTML = `
+                <td class="p-8 text-xl font-black">${t.n}</td>
+                <td class="p-8 text-center">R$ ${t.m2},00</td>
+                <td class="p-8 text-center italic text-xs uppercase">${t.t}</td>
+                <td class="p-8 text-right text-2xl font-black">R$ ${t.c.toLocaleString('pt-BR')}</td>`;
+            tbody.appendChild(tr);
+        });
+
+        document.getElementById('etapa-1').classList.add('step-inactive');
+        document.getElementById('etapa-2').classList.remove('step-inactive');
+        window.scrollTo(0,0);
+    }
+
+    function voltarConfig() {
+        document.getElementById('etapa-2').classList.add('step-inactive');
+        document.getElementById('etapa-1').classList.remove('step-inactive');
+    }
+
+    function falarWhatsApp() {
+        const msg = `Olá! Usei o Simulador Renova Blocos para uma obra de ${document.getElementById('res-area').innerText}. Quero orçar.`;
+        window.open(`https://wa.me/5571987393020?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function irParaSimulador() { document.getElementById('etapa-0').classList.add('step-inactive'); document.getElementById('etapa-1').classList.remove('step-inactive'); }
+
+    desenharLote();
+</script>
+</body>
+</html>
